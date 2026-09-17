@@ -565,7 +565,7 @@ body {
 
 .tab-bar {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 4px;
   flex-shrink: 0;
   z-index: 5;
@@ -703,3 +703,83 @@ body {
   transform: rotate(8deg);
 }
 .brand-block, .home-body .lede, .home-body .footnote { position: relative; z-index: 1; }
+
+
+/* ——— Two-app demo split (T-09 / T-10 / T-11) ——— */
+.tab-bar[hidden] { display: none !important; }
+
+.badge-app {
+  background: rgba(200,255,61,.12);
+  color: var(--primary);
+  border: 1px solid rgba(200,255,61,.35);
+  flex-shrink: 0;
+  margin-left: auto;
+}
+.badge-app-op {
+  background: rgba(61,139,253,.14);
+  color: #8cbcff;
+  border: 1px solid rgba(61,139,253,.4);
+}
+
+.hub-card-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+  padding: 16px 18px;
+}
+.hub-card-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: .02em;
+}
+.hub-card-desc {
+  font-weight: 500;
+  font-size: .82rem;
+  opacity: .78;
+}
+.btn-primary.hub-card-btn .hub-card-desc { color: #1a2a0a; opacity: .85; }
+.btn-secondary.hub-card-btn .hub-card-desc { color: var(--muted); }
+
+.brand-block-sm { margin-bottom: 4px; }
+.logo-mark-sm {
+  width: 48px; height: 48px;
+  margin-bottom: 8px;
+  border-radius: 14px;
+}
+.logo-mark-sm img { width: 48px; height: 48px; }
+.brand-name-sm { font-size: 1.45rem; letter-spacing: .07em; }
+
+.session-card .session-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: .88rem;
+}
+.session-card .session-meta > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.session-card .session-meta dt { color: var(--muted); }
+.session-card .session-meta dd { font-weight: 650; text-align: right; }
+
+.tab-item[data-nav="hincha-home"].is-active,
+.tab-item[data-nav="operador-home"].is-active {
+  color: var(--primary);
+}
+.tab-item[data-nav="hincha-home"].is-active::before,
+.tab-item[data-nav="operador-home"].is-active::before {
+  width: 22px;
+  background: linear-gradient(90deg, var(--primary-deep), var(--primary-dim), var(--primary));
+}
+.tab-item[data-nav="hincha-home"].is-active .tab-icon,
+.tab-item[data-nav="operador-home"].is-active .tab-icon {
+  background: rgba(200, 255, 61, 0.16);
+  color: var(--primary);
+  box-shadow: 0 0 0 1px rgba(200, 255, 61, 0.28), 0 6px 16px rgba(200, 255, 61, 0.18);
+}
+
+.phone-frame[data-app="hub"] .progress-bar { display: none; }
