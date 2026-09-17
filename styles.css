@@ -1,19 +1,22 @@
 /* FANECT / Tribuna Segura — prototipo móvil */
 :root {
-  --bg: #0a1628;
-  --bg-elev: #122038;
-  --bg-card: #162844;
-  --border: #243656;
-  --text: #e8eef7;
-  --muted: #8fa3c0;
-  --primary: #1db954;
-  --primary-dim: #159643;
-  --accent: #3d8bfd;
-  --danger: #e74c3c;
-  --warn: #f0a500;
-  --ok: #1db954;
+  /* FANECT brand direction (provisional — 01 Deportiva) */
+  --bg: #070707;
+  --bg-elev: #121212;
+  --bg-card: #171717;
+  --border: #2a2a2a;
+  --text: #f4f4f4;
+  --muted: #9a9a9a;
+  --primary: #c8ff3d;
+  --primary-dim: #2f9e4b;
+  --primary-deep: #145c3a;
+  --accent: #2f9e4b;
+  --danger: #ff5a4a;
+  --warn: #ffd56a;
+  --ok: #c8ff3d;
   --radius: 14px;
-  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-brand: "Archivo Black", "Arial Black", system-ui, sans-serif;
   --phone-w: 390px;
 }
 
@@ -21,7 +24,7 @@
 
 html, body {
   min-height: 100%;
-  background: #050b14;
+  background: #050505;
   color: var(--text);
   font-family: var(--font);
   font-size: 16px;
@@ -44,7 +47,7 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 28px;
-  box-shadow: 0 24px 64px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.04);
+  box-shadow: 0 24px 64px rgba(0,0,0,.7), 0 0 0 1px rgba(200,255,61,.08), inset 0 0 0 1px rgba(255,255,255,.03);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -72,7 +75,7 @@ body {
 .progress-fill {
   height: 100%;
   width: 12.5%;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: linear-gradient(90deg, var(--primary-deep), var(--primary-dim), var(--primary));
   border-radius: 2px;
   transition: width .35s ease;
 }
@@ -152,23 +155,30 @@ body {
 
 .brand-block { margin-bottom: 8px; }
 .logo-mark {
-  width: 52px; height: 52px;
-  margin: 0 auto 10px;
-  border-radius: 16px;
-  background: linear-gradient(145deg, var(--primary), #0d7a38);
+  width: 64px; height: 64px;
+  margin: 0 auto 12px;
+  border-radius: 18px;
+  overflow: hidden;
   display: grid; place-items: center;
-  font-size: 1.6rem; font-weight: 800; color: #04120a;
-  box-shadow: 0 8px 24px rgba(29,185,84,.35);
+  background: #0a0a0a;
+  box-shadow: 0 0 0 1px rgba(200,255,61,.18), 0 12px 32px rgba(0,0,0,.55), 0 0 40px rgba(47,158,75,.22);
 }
+.logo-mark img { width: 64px; height: 64px; display: block; }
 .brand-name {
-  font-size: 1.6rem;
-  letter-spacing: .12em;
-  font-weight: 800;
+  font-family: var(--font-brand);
+  font-size: 1.85rem;
+  letter-spacing: 0.08em;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #fff;
 }
 .product-name {
-  color: var(--accent);
-  font-weight: 600;
-  margin: 4px 0 8px;
+  color: var(--primary);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  margin: 6px 0 10px;
 }
 .lede {
   color: var(--muted);
@@ -198,9 +208,13 @@ body {
 }
 .btn-primary {
   background: var(--primary);
-  color: #04120a;
+  color: #0a0a0a;
+  box-shadow: 0 8px 24px rgba(200,255,61,.22);
 }
-.btn-primary:hover:not(:disabled) { background: var(--primary-dim); color: #fff; }
+.btn-primary:hover:not(:disabled) {
+  background: #d9ff6a;
+  color: #0a0a0a;
+}
 .btn-secondary {
   background: var(--bg-card);
   color: var(--text);
@@ -235,14 +249,14 @@ body {
   vertical-align: middle;
 }
 .badge-sim {
-  background: rgba(240,165,0,.18);
-  color: #ffc857;
-  border: 1px solid rgba(240,165,0,.35);
+  background: rgba(200,255,61,.1);
+  color: var(--primary);
+  border: 1px solid rgba(200,255,61,.35);
 }
 .badge-ok {
-  background: rgba(29,185,84,.18);
+  background: rgba(200,255,61,.18);
   color: #5dff9a;
-  border: 1px solid rgba(29,185,84,.4);
+  border: 1px solid rgba(200,255,61,.4);
 }
 
 .muted { color: var(--muted); }
@@ -310,7 +324,7 @@ body {
 }
 .consent-item:has(.toggle:checked) {
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px rgba(29,185,84,.25);
+  box-shadow: 0 0 0 1px rgba(200,255,61,.25);
 }
 .consent-text {
   flex: 1;
@@ -365,7 +379,7 @@ body {
 }
 .choice-card:hover { border-color: var(--accent); }
 .choice-card:active { transform: scale(.99); }
-.choice-card-accent { border-color: rgba(29,185,84,.45); }
+.choice-card-accent { border-color: rgba(200,255,61,.45); }
 .choice-title { font-weight: 700; font-size: 1rem; }
 .choice-desc { color: var(--muted); font-size: .85rem; }
 
@@ -403,7 +417,7 @@ body {
   font-size: 2rem; font-weight: 800;
 }
 .result-icon.success {
-  background: rgba(29,185,84,.2);
+  background: rgba(200,255,61,.2);
   color: var(--ok);
   border: 2px solid var(--ok);
 }
@@ -418,8 +432,8 @@ body {
 .kv-card dd, .audit-card dd { font-weight: 600; text-align: right; word-break: break-word; }
 
 .pass-card {
-  background: linear-gradient(160deg, #1a3a28 0%, var(--bg-card) 55%);
-  border-color: rgba(29,185,84,.35);
+  background: linear-gradient(160deg, #102618 0%, var(--bg-card) 55%);
+  border-color: rgba(200,255,61,.35);
 }
 .pass-top {
   display: flex;
@@ -450,7 +464,7 @@ body {
 }
 .ticket-item.selected {
   border-color: var(--primary);
-  background: rgba(29,185,84,.08);
+  background: rgba(200,255,61,.08);
 }
 .ticket-item strong { display: block; margin-bottom: 4px; }
 .ticket-item span { color: var(--muted); font-size: .82rem; }
@@ -539,7 +553,7 @@ body {
   margin-bottom: 4px;
 }
 .decision-banner.allow {
-  background: rgba(29,185,84,.2);
+  background: rgba(200,255,61,.2);
   color: #5dff9a;
   border: 2px solid var(--ok);
 }
@@ -556,8 +570,8 @@ body {
   flex-shrink: 0;
   z-index: 5;
   padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(180deg, rgba(18, 32, 56, 0.78), rgba(8, 14, 28, 0.96));
-  border-top: 1px solid rgba(61, 139, 253, 0.22);
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.82), rgba(8, 8, 8, 0.96));
+  border-top: 1px solid rgba(200, 255, 61, 0.16);
   box-shadow: 0 -12px 28px rgba(0, 0, 0, 0.38);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -610,16 +624,16 @@ body {
 }
 .tab-item:hover { color: var(--text); }
 .tab-item.is-active {
-  color: #7dffb0;
+  color: var(--primary);
 }
 .tab-item.is-active::before {
   width: 22px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: linear-gradient(90deg, var(--primary-deep), var(--primary-dim), var(--primary));
 }
 .tab-item.is-active .tab-icon {
-  background: rgba(29, 185, 84, 0.16);
-  color: #7dffb0;
-  box-shadow: 0 0 0 1px rgba(29, 185, 84, 0.28), 0 6px 16px rgba(29, 185, 84, 0.18);
+  background: rgba(200, 255, 61, 0.16);
+  color: var(--primary);
+  box-shadow: 0 0 0 1px rgba(200, 255, 61, 0.28), 0 6px 16px rgba(200, 255, 61, 0.18);
 }
 .tab-item[data-nav="pase"].is-active {
   color: #ffd56a;
@@ -666,3 +680,25 @@ body {
   .screen-actions { padding: 8px 20px 10px; gap: 8px; }
   .btn { padding: 12px 16px; }
 }
+
+
+/* provisional brand motion ribbons on home */
+.home-body {
+  position: relative;
+  overflow: hidden;
+}
+.home-body::before {
+  content: "";
+  position: absolute;
+  inset: -20% -30% auto auto;
+  width: 180px;
+  height: 220px;
+  background:
+    linear-gradient(135deg, transparent 30%, rgba(20,92,58,.55) 30%, rgba(20,92,58,.55) 38%, transparent 38%),
+    linear-gradient(135deg, transparent 42%, rgba(47,158,75,.4) 42%, rgba(47,158,75,.4) 50%, transparent 50%),
+    linear-gradient(135deg, transparent 54%, rgba(200,255,61,.28) 54%, rgba(200,255,61,.28) 62%, transparent 62%);
+  pointer-events: none;
+  opacity: .9;
+  transform: rotate(8deg);
+}
+.brand-block, .home-body .lede, .home-body .footnote { position: relative; z-index: 1; }

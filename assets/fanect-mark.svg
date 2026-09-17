@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" role="img" aria-label="FANECT">
+  <rect width="80" height="80" rx="18" fill="#0a0a0a"/>
+  <path d="M12 16c0-1.1.9-2 2-2h50c2.5 0 3.7 3 1.8 4.7L52 34H14c-1.1 0-2-.9-2-2V16z" fill="#145c3a"/>
+  <path d="M12 32c0-1.1.9-2 2-2h40c2.5 0 3.7 3 1.8 4.7L44 50H14c-1.1 0-2-.9-2-2V32z" fill="#2f9e4b"/>
+  <path d="M12 48c0-1.1.9-2 2-2h30c2.5 0 3.7 3 1.8 4.7L36 66H14c-1.1 0-2-.9-2-2V48z" fill="#c8ff3d"/>
+</svg>

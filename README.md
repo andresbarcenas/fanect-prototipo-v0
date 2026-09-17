@@ -92,3 +92,12 @@ fanect-prototipo-v0/
 ├── app.js       # Navegación + estado
 └── README.md
 ```
+
+
+## Dirección de marca (provisional)
+
+Basada en moodboard **01 — Deportiva** (no final):
+- Mark F en 3 franjas verdes (oscuro → lima)
+- Fondo negro / charcoal
+- Tipografía display: Archivo Black; UI: Manrope
+- Acento primario: lima `#c8ff3d`
