@@ -1,72 +1,93 @@
 # FANECT — Tribuna Segura (prototipo P0)
 
-Prototipo estático clicable (HTML/CSS/JS) del happy path de hincha y del escáner de operador para el piloto de identidad digital + boleta nominativa.
+Prototipo estático clicable (HTML/CSS/JS) para demo institucional. El MVP se presenta como **dos apps separadas** (Hincha y Operador) con un **hub** de entrada. No hay un flujo continuo que mezcle pantallas de hincha y operador.
 
 **Marca:** FANECT · **Producto (provisional):** Tribuna Segura  
 **Evento demo:** Evento demo — Club Alpha (ficticio; no es un club real)  
 **Sin backend.** Todo el estado vive en memoria / `localStorage`. No hay integraciones reales.
 
+**Live:** [https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
+
+---
+
+## Arquitectura de la demo (T-09 / T-10 / T-11)
+
+| Contexto | Pantalla de entrada | Tab bar |
+|----------|---------------------|---------|
+| **Hub** | `hub` | Oculta |
+| **App Hincha** | `hincha-home` | Inicio · Pase |
+| **App Operador** | `operador-home` | Inicio · Escáner |
+
+Desde el hub solo hay dos entradas: **App Hincha** y **App Operador**. «Cambiar de app» vuelve al hub. El QR del hincha **no** enlaza al escáner.
+
 ---
 
 ## Cómo abrir
 
-### Opción A — Servidor local (recomendado)
+### Opción A — GitHub Pages
+
+[https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
+
+### Opción B — Servidor local
 
 ```bash
-cd /workspace/fanect-prototipo-v0
+cd fanect-prototipo-v0
 python3 -m http.server 8765
 ```
 
-Luego abre en el navegador: [http://127.0.0.1:8765/](http://127.0.0.1:8765/)
+Luego: [http://127.0.0.1:8765/](http://127.0.0.1:8765/)
 
-### Opción B — Archivo directo
+### Opción C — Archivo directo
 
-Abre `index.html` con doble clic o arrástralo al navegador (`file://`). Funciona sin servidor.
-
-Viewport pensado para ~390 px (móvil). En escritorio se muestra dentro de un marco tipo teléfono.
+Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en marco tipo teléfono.
 
 ---
 
 ## Pantallas
 
-### Hincha (flujo con indicador de progreso)
+### Hub
 
-| # | Pantalla | Descripción |
-|---|----------|-------------|
-| 1 | Entrada evento | Código/link del evento cerrado (Club Alpha demo) |
-| 2 | Registro | Campos mínimos (nombre, CC, celular, correo) |
-| 3 | Consentimientos | Toggles separados: identidad, acceso, comunicaciones |
-| 4 | Verificación | Elegir proveedor mock **o** ruta asistida no biométrica |
-| 4b | Ruta asistida | Rama real P0: documento + selfie de control + aprobación agente |
-| 4c | Proveedor mock | Spinner simulado (futuro integrado) |
-| 5 | Resultado | Éxito de verificación |
-| 6 | Fan Pass | Pass activado |
-| 7 | Vincular boleta | Simulador de boletas nominativas |
-| 8 | Pase + QR | QR dinámico con TTL y botón «Rotar QR» |
+| ID | Descripción |
+|----|-------------|
+| `hub` | Marca FANECT + dos tarjetas de entrada (Hincha / Operador) |
 
-### Operador
+### App Hincha (progreso 1–8)
 
-| # | Pantalla | Descripción |
-|---|----------|-------------|
-| 9 | Escáner | Elegir estado demo del QR: válido / usado / expirado / replay |
-| 10 | Decisión | ALLOW o DENY con motivo |
-| 11 | Mini auditoría | Correlación hincha ↔ boleta ↔ QR ↔ decisión |
+| # | ID | Descripción |
+|---|-----|-------------|
+| — | `hincha-home` | Home corto + CTA «Entrar al evento» |
+| 1 | `entrada` | Código/link del evento (Club Alpha demo) |
+| 2 | `registro` | Nombre, CC, celular, correo |
+| 3 | `consentimientos` | Identidad / Acceso / Comunicaciones |
+| 4 | `verificacion` | Proveedor mock **o** ruta asistida |
+| 4b | `asistida` | Documento + selfie de control + agente |
+| 4c | `proveedor` | Spinner simulado |
+| 5 | `resultado` | Identidad verificada |
+| 6 | `fanpass` | Fan Pass activo |
+| 7 | `boleta` | Vincular boleta nominativa |
+| 8 | `pase` | QR dinámico + TTL (sin salto a operador) |
 
-Barra inferior de demo: Inicio · Pase · Escáner.
+### App Operador
+
+| ID | Descripción |
+|----|-------------|
+| `operador-home` | Sesión mock (operador / puerta / turno) + «Abrir escáner» |
+| `scanner` | Estados demo: válido / usado / expirado / replay |
+| `decision` | ALLOW o DENY con motivo |
+| `auditoria` | Correlación hincha ↔ boleta ↔ QR ↔ decisión |
 
 ---
 
-## Happy path sugerido (demo fundador)
+## Happy path sugerido
 
-1. **Soy hincha — entrar al evento**
-2. Continuar → Registro (valores precargados) → Continuar
-3. Activar toggles **Identidad** y **Acceso** (Comunicaciones opcional) → Continuar
-4. Elegir **Ruta asistida no biométrica** → dejar «Aprobado por agente» → Enviar
-5. Activar Fan Pass → Vincular boleta (elegir una) → Ver pase + QR
-6. Probar **Rotar QR** (cambia patrón y reinicia TTL)
-7. Ir al escáner → probar los 4 estados → ver decisión y mini auditoría
+1. En el **hub**, abrir **App Hincha** → Entrar al evento  
+2. Registro (precargado) → consentimientos Identidad + Acceso → Continuar  
+3. **Ruta asistida no biométrica** → «Aprobado por agente» → Enviar  
+4. Activar Fan Pass → Vincular boleta → ver pase + QR (rotar TTL)  
+5. **Cambiar de app** → hub → **App Operador** → Abrir escáner  
+6. Probar los 4 estados → decisión → mini auditoría  
 
-Consola: `FanectDemo.reset()` limpia `localStorage` y recarga. `FanectDemo.go('pase')` salta a una pantalla.
+Consola: `FanectDemo.reset()` · `FanectDemo.go('pase')` · `FanectDemo.state.app`
 
 ---
 
@@ -79,7 +100,7 @@ Consola: `FanectDemo.reset()` limpia `localStorage` y recarga. `FanectDemo.go('p
 - Consola completa de supervisor
 - Backend / APIs reales
 
-Las etiquetas **SIMULADO** / **RAMA P0** / **futuro integrado** marcan qué es mock vs. intención de producto.
+Etiquetas **SIMULADO** / **RAMA P0** / **HINCHA** / **OPERADOR** marcan mock vs. contexto de app.
 
 ---
 
@@ -87,12 +108,13 @@ Las etiquetas **SIMULADO** / **RAMA P0** / **futuro integrado** marcan qué es m
 
 ```
 fanect-prototipo-v0/
-├── index.html   # SPA
-├── styles.css   # Estética sports-tech (navy / verde)
-├── app.js       # Navegación + estado
+├── index.html
+├── styles.css
+├── app.js
+├── assets/fanect-mark.svg
+├── assets/fanect-f.svg
 └── README.md
 ```
-
 
 ## Dirección de marca (provisional)
 
