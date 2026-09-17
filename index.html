@@ -1,373 +1,411 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#070707" />
-  <title>FANECT — Tribuna Segura · prototipo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#070707" />
+<title>FANECT — Tribuna Segura · prototipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="app" class="phone-frame">
-    <!-- Status bar mock -->
-    <div class="status-bar" aria-hidden="true">
-      <span class="status-time" id="statusTime">16:17</span>
-      <span class="status-icons">●●● ▮</span>
-    </div>
-
-    <!-- Progress (fan flow only) -->
-    <div id="progressBar" class="progress-bar" hidden>
-      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-      <span class="progress-label" id="progressLabel">Paso 1 de 8</span>
-    </div>
-
-    <!-- SCREEN: Home / Role picker -->
-    <section id="screen-home" class="screen active" data-screen="home">
-      <div class="screen-body centered home-body">
-        <div class="brand-block">
-          <div class="logo-mark" aria-hidden="true">
-            <img src="assets/fanect-mark.svg" alt="" width="64" height="64" />
-          </div>
-          <h1 class="brand-name">FANECT</h1>
-          <p class="product-name">Tribuna Segura</p>
-          <span class="badge badge-sim">PROTOTIPO DEMO · P0</span>
-        </div>
-        <p class="lede">Identidad digital + acceso con boleta nominativa para eventos de fútbol (piloto Colombia).</p>
-        <p class="footnote">Sin backend. Todo simulado en este dispositivo. No hay integraciones reales.</p>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" data-go="entrada">Soy hincha — entrar al evento</button>
-        <button type="button" class="btn btn-secondary btn-block" data-go="scanner">Soy operador — escanear QR</button>
-      </div>
-    </section>
-
-    <!-- 1. Entrada evento -->
-    <section id="screen-entrada" class="screen" data-screen="entrada" data-fan-step="1">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="home" aria-label="Volver">←</button>
-        <h2>Entrada al evento</h2>
-      </header>
-      <div class="screen-body">
-        <div class="event-card">
-          <div class="event-badge">ACCESO POR CÓDIGO</div>
-          <h3>Evento demo — Club Alpha</h3>
-          <p class="muted">Estadio Demo · Bogotá · Sábado 20:00</p>
-          <p class="muted small">Evento por invitación: entra con el código del organizador (no está bloqueado).</p>
-        </div>
-        <label class="field">
-          <span class="field-label">Código / enlace del evento</span>
-          <input type="text" id="eventCode" value="ALPHA-DEMO-2026" readonly class="input" />
-        </label>
-        <p class="hint"><span class="badge badge-sim">SIMULADO</span> En producción el hincha llega por link o QR del organizador.</p>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" data-go="registro">Continuar al registro</button>
-      </div>
-    </section>
-
-    <!-- 2. Registro -->
-    <section id="screen-registro" class="screen" data-screen="registro" data-fan-step="2">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="entrada" aria-label="Volver">←</button>
-        <h2>Registro</h2>
-      </header>
-      <div class="screen-body">
-        <p class="muted small">Datos mínimos para el piloto. Campos de demostración.</p>
-        <label class="field">
-          <span class="field-label">Nombre completo</span>
-          <input type="text" id="regNombre" class="input" value="Andrés Demo" autocomplete="name" />
-        </label>
-        <label class="field">
-          <span class="field-label">Documento (CC)</span>
-          <input type="text" id="regDoc" class="input" value="1.234.567.890" inputmode="numeric" />
-        </label>
-        <label class="field">
-          <span class="field-label">Celular</span>
-          <input type="tel" id="regCel" class="input" value="300 123 4567" />
-        </label>
-        <label class="field">
-          <span class="field-label">Correo</span>
-          <input type="email" id="regEmail" class="input" value="demo@fanect.co" />
-        </label>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" id="btnRegistro">Continuar</button>
-      </div>
-    </section>
-
-    <!-- 3. Consentimientos -->
-    <section id="screen-consentimientos" class="screen" data-screen="consentimientos" data-fan-step="3">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="registro" aria-label="Volver">←</button>
-        <h2>Consentimientos</h2>
-      </header>
-      <div class="screen-body">
-        <p class="muted small">Cada propósito por separado. No hay “aceptar todo”.</p>
-        <div class="consent-list">
-          <label class="consent-item">
-            <div class="consent-text">
-              <strong>Identidad</strong>
-              <span>Verificar mi identidad para el Fan Pass del evento (tratamiento de datos de identificación).</span>
-            </div>
-            <input type="checkbox" id="consentId" class="toggle" />
-          </label>
-          <label class="consent-item">
-            <div class="consent-text">
-              <strong>Acceso al evento</strong>
-              <span>Vincular boleta nominativa y generar QR de ingreso; registro de validaciones en puerta.</span>
-            </div>
-            <input type="checkbox" id="consentAcceso" class="toggle" />
-          </label>
-          <label class="consent-item">
-            <div class="consent-text">
-              <strong>Comunicaciones</strong>
-              <span>Recibir avisos del evento y del piloto (opcional; no bloquea el acceso).</span>
-            </div>
-            <input type="checkbox" id="consentComms" class="toggle" />
-          </label>
-        </div>
-        <p class="hint" id="consentHint">Debes aceptar Identidad y Acceso para continuar.</p>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" id="btnConsent" disabled>Continuar</button>
-      </div>
-    </section>
-
-    <!-- 4. Verificación identidad -->
-    <section id="screen-verificacion" class="screen" data-screen="verificacion" data-fan-step="4">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="consentimientos" aria-label="Volver">←</button>
-        <h2>Verificación de identidad</h2>
-      </header>
-      <div class="screen-body">
-        <p class="muted small">Elige cómo verificar. En P0 la ruta biométrica es mock; la asistida no biométrica es la rama real del piloto.</p>
-        <div class="choice-cards">
-          <button type="button" class="choice-card" id="choiceProvider">
-            <span class="choice-title">Proveedor de identidad</span>
-            <span class="choice-desc">Flujo mock de verificación con proveedor (futuro integrado).</span>
-            <span class="badge badge-sim">SIMULADO</span>
-          </button>
-          <button type="button" class="choice-card choice-card-accent" id="choiceAsistida">
-            <span class="choice-title">Ruta asistida no biométrica</span>
-            <span class="choice-desc">Validación manual asistida: documento + selfie de control (sin matching 1:N).</span>
-            <span class="badge badge-ok">RAMA P0</span>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4b. Ruta asistida (branch) -->
-    <section id="screen-asistida" class="screen" data-screen="asistida" data-fan-step="4">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
-        <h2>Ruta asistida</h2>
-      </header>
-      <div class="screen-body">
-        <div class="info-card">
-          <p><strong>Pasos del operador de verificación</strong> (sin biometría 1:N):</p>
-          <ol class="steps-list">
-            <li>Captura / carga de documento (CC)</li>
-            <li>Selfie de control (archivo, no matching facial)</li>
-            <li>Revisión asistida por agente del piloto</li>
-          </ol>
-        </div>
-        <label class="field">
-          <span class="field-label">Documento (foto) <span class="badge badge-sim">SIMULADO</span></span>
-          <div class="fake-upload" id="uploadDoc">📄 Documento cargado · CC demo</div>
-        </label>
-        <label class="field">
-          <span class="field-label">Selfie de control <span class="badge badge-sim">SIMULADO</span></span>
-          <div class="fake-upload" id="uploadSelfie">📷 Selfie de control · lista</div>
-        </label>
-        <label class="field">
-          <span class="field-label">Estado revisión</span>
-          <select id="asistidaEstado" class="input">
-            <option value="pendiente">Pendiente de revisión</option>
-            <option value="aprobado" selected>Aprobado por agente</option>
-            <option value="rechazado">Rechazado</option>
-          </select>
-        </label>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" id="btnAsistida">Enviar a verificación</button>
-      </div>
-    </section>
-
-    <!-- 4c. Proveedor mock -->
-    <section id="screen-proveedor" class="screen" data-screen="proveedor" data-fan-step="4">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
-        <h2>Proveedor (mock)</h2>
-      </header>
-      <div class="screen-body centered">
-        <div class="spinner" id="provSpinner" aria-hidden="true"></div>
-        <p id="provText">Conectando con proveedor de identidad…</p>
-        <p class="hint"><span class="badge badge-sim">SIMULADO</span> No hay integración real.</p>
-      </div>
-    </section>
-
-    <!-- 5. Resultado verificación -->
-    <section id="screen-resultado" class="screen" data-screen="resultado" data-fan-step="5">
-      <header class="screen-header">
-        <h2>Resultado</h2>
-      </header>
-      <div class="screen-body centered">
-        <div class="result-icon success" aria-hidden="true">✓</div>
-        <h3 id="resultadoTitulo">Identidad verificada</h3>
-        <p class="muted" id="resultadoDesc">Tu identidad fue confirmada para este evento.</p>
-        <div class="kv-card" id="resultadoMeta"></div>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" data-go="fanpass">Activar Fan Pass</button>
-      </div>
-    </section>
-
-    <!-- 6. Fan Pass activado -->
-    <section id="screen-fanpass" class="screen" data-screen="fanpass" data-fan-step="6">
-      <header class="screen-header">
-        <h2>Fan Pass</h2>
-      </header>
-      <div class="screen-body">
-        <div class="pass-card">
-          <div class="pass-top">
-            <span class="pass-brand">FANECT</span>
-            <span class="badge badge-ok">ACTIVO</span>
-          </div>
-          <h3 id="passNombre">Andrés Demo</h3>
-          <p class="muted">Evento demo — Club Alpha</p>
-          <div class="pass-id">FP-<span id="passId">A1B2C3</span></div>
-        </div>
-        <p class="hint">Siguiente: vincular tu boleta nominativa al Fan Pass.</p>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" data-go="boleta">Vincular boleta</button>
-      </div>
-    </section>
-
-    <!-- 7. Vincular boleta -->
-    <section id="screen-boleta" class="screen" data-screen="boleta" data-fan-step="7">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="fanpass" aria-label="Volver">←</button>
-        <h2>Vincular boleta</h2>
-      </header>
-      <div class="screen-body">
-        <p class="muted small"><span class="badge badge-sim">SIMULADOR</span> Elige una boleta nominativa de demo.</p>
-        <div class="ticket-list" id="ticketList" role="listbox" aria-label="Boletas disponibles"></div>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" id="btnVincular" disabled>Vincular boleta seleccionada</button>
-      </div>
-    </section>
-
-    <!-- 8. Pase + QR dinámico -->
-    <section id="screen-pase" class="screen" data-screen="pase" data-fan-step="8">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="home" aria-label="Inicio">⌂</button>
-        <h2>Tu pase</h2>
-      </header>
-      <div class="screen-body">
-        <div class="qr-card">
-          <div class="qr-meta">
-            <span id="paseSector">Tribuna Norte · Fila 12 · Asiento 08</span>
-            <span class="badge badge-ok" id="paseEstado">VÁLIDO</span>
-          </div>
-          <div class="qr-box" id="qrBox" aria-label="Código QR dinámico">
-            <canvas id="qrCanvas" width="200" height="200"></canvas>
-          </div>
-          <div class="ttl-row">
-            <span>TTL del QR</span>
-            <strong id="qrTtl">45 s</strong>
-          </div>
-          <p class="mono small" id="qrPayload">qr:…</p>
-        </div>
-        <p class="footnote">El operador puede probar estados: válido, usado, expirado, replay.</p>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-secondary btn-block" id="btnRotar">Rotar QR (simulado)</button>
-        <button type="button" class="btn btn-ghost btn-block" data-go="scanner">Ir al escáner de operador →</button>
-      </div>
-    </section>
-
-    <!-- 9. Scanner -->
-    <section id="screen-scanner" class="screen" data-screen="scanner">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="home" aria-label="Volver">←</button>
-        <h2>Escáner de acceso</h2>
-      </header>
-      <div class="screen-body">
-        <div class="scanner-view">
-          <div class="scanner-frame"></div>
-          <p class="muted small">Vista cámara · <span class="badge badge-sim">SIMULADO</span></p>
-        </div>
-        <p class="field-label">Estado del QR a escanear (demo)</p>
-        <div class="state-grid" id="stateGrid">
-          <button type="button" class="state-btn" data-qr-state="valido">Válido</button>
-          <button type="button" class="state-btn" data-qr-state="usado">Usado</button>
-          <button type="button" class="state-btn" data-qr-state="expirado">Expirado</button>
-          <button type="button" class="state-btn" data-qr-state="replay">Replay</button>
-        </div>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" id="btnScan" disabled>Escanear QR seleccionado</button>
-      </div>
-    </section>
-
-    <!-- 10. Decisión -->
-    <section id="screen-decision" class="screen" data-screen="decision">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="scanner" aria-label="Volver">←</button>
-        <h2>Decisión de acceso</h2>
-      </header>
-      <div class="screen-body centered">
-        <div id="decisionBanner" class="decision-banner"></div>
-        <div class="kv-card" id="decisionMeta"></div>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-primary btn-block" id="btnAuditoria">Ver mini auditoría</button>
-        <button type="button" class="btn btn-ghost btn-block" data-go="scanner">Escanear otro</button>
-      </div>
-    </section>
-
-    <!-- 11. Mini auditoría -->
-    <section id="screen-auditoria" class="screen" data-screen="auditoria">
-      <header class="screen-header">
-        <button type="button" class="btn-icon" data-go="decision" aria-label="Volver">←</button>
-        <h2>Mini auditoría</h2>
-      </header>
-      <div class="screen-body">
-        <p class="muted small">Correlación mínima: hincha ↔ boleta ↔ QR ↔ decisión.</p>
-        <div class="audit-card" id="auditCard"></div>
-      </div>
-      <div class="screen-actions">
-        <button type="button" class="btn btn-secondary btn-block" data-go="home">Volver al inicio</button>
-        <button type="button" class="btn btn-ghost btn-block" data-go="scanner">Nuevo escaneo</button>
-      </div>
-    </section>
-
-    <nav class="tab-bar" aria-label="Navegación principal">
-      <button type="button" class="tab-item is-active" data-go="home" data-nav="home" aria-current="page">
-        <span class="tab-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"/></svg>
-        </span>
-        <span class="tab-label">Inicio</span>
-      </button>
-      <button type="button" class="tab-item" data-go="pase" data-nav="pase">
-        <span class="tab-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h5"/><circle cx="15.5" cy="16.5" r="1.5"/></svg>
-        </span>
-        <span class="tab-label">Pase</span>
-      </button>
-      <button type="button" class="tab-item" data-go="scanner" data-nav="scanner">
-        <span class="tab-icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4H5a1 1 0 0 0-1 1v2M17 4h2a1 1 0 0 1 1 1v2M7 20H5a1 1 0 0 1-1-1v-2M17 20h2a1 1 0 0 0 1-1v-2"/><rect x="8" y="8" width="8" height="8" rx="1"/><path d="M3 12h3M18 12h3"/></svg>
-        </span>
-        <span class="tab-label">Escáner</span>
-      </button>
-    </nav>
-  </div>
-  <script src="app.js"></script>
+<div id="app" class="phone-frame" data-app="hub">
+<!-- Status bar mock -->
+<div class="status-bar" aria-hidden="true">
+<span class="status-time" id="statusTime">16:17</span>
+<span class="status-icons">●●● ▮</span>
+</div>
+<!-- Progress (fan flow only) -->
+<div id="progressBar" class="progress-bar" hidden>
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+<span class="progress-label" id="progressLabel">Paso 1 de 8</span>
+</div>
+<!-- SCREEN: Hub (demo entry) -->
+<section id="screen-hub" class="screen active" data-screen="hub">
+<div class="screen-body centered home-body">
+<div class="brand-block">
+<div class="logo-mark" aria-hidden="true">
+<img src="assets/fanect-mark.svg" alt="" width="64" height="64" />
+</div>
+<h1 class="brand-name">FANECT</h1>
+<p class="product-name">Tribuna Segura</p>
+<span class="badge badge-sim">PROTOTIPO DEMO · P0</span>
+</div>
+<p class="lede">Dos productos para la demo institucional. Elige la app a mostrar; no hay un flujo continuo entre hincha y operador.</p>
+<p class="footnote">Sin backend. Todo simulado en este dispositivo. No hay integraciones reales.</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block hub-card-btn" data-go="hincha-home">
+<span class="hub-card-title">App Hincha</span>
+<span class="hub-card-desc">Registro, Fan Pass y QR de ingreso</span>
+</button>
+<button type="button" class="btn btn-secondary btn-block hub-card-btn" data-go="operador-home">
+<span class="hub-card-title">App Operador</span>
+<span class="hub-card-desc">Escáner de acceso y decisión en puerta</span>
+</button>
+</div>
+</section>
+<!-- APP HINCHA: home -->
+<section id="screen-hincha-home" class="screen" data-screen="hincha-home">
+<header class="screen-header">
+<h2>App Hincha</h2>
+<span class="badge badge-app">HINCHA</span>
+</header>
+<div class="screen-body centered home-body">
+<div class="brand-block brand-block-sm">
+<div class="logo-mark logo-mark-sm" aria-hidden="true">
+<img src="assets/fanect-mark.svg" alt="" width="48" height="48" />
+</div>
+<h1 class="brand-name brand-name-sm">FANECT</h1>
+<p class="product-name">Tu acceso al evento</p>
+<span class="badge badge-sim">SIMULADO</span>
+</div>
+<p class="lede">Identidad digital + boleta nominativa para el Evento demo — Club Alpha.</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" data-go="entrada">Entrar al evento</button>
+<button type="button" class="btn btn-ghost btn-block" data-go="hub">Cambiar de app</button>
+</div>
+</section>
+<!-- 1. Entrada evento -->
+<section id="screen-entrada" class="screen" data-screen="entrada" data-fan-step="1">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="hincha-home" aria-label="Volver">←</button>
+<h2>Entrada al evento</h2>
+</header>
+<div class="screen-body">
+<div class="event-card">
+<div class="event-badge">ACCESO POR CÓDIGO</div>
+<h3>Evento demo — Club Alpha</h3>
+<p class="muted">Estadio Demo · Bogotá · Sábado 20:00</p>
+<p class="muted small">Evento por invitación: entra con el código del organizador (no está bloqueado).</p>
+</div>
+<label class="field">
+<span class="field-label">Código / enlace del evento</span>
+<input type="text" id="eventCode" value="ALPHA-DEMO-2026" readonly class="input" />
+</label>
+<p class="hint"><span class="badge badge-sim">SIMULADO</span> En producción el hincha llega por link o QR del organizador.</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" data-go="registro">Continuar al registro</button>
+</div>
+</section>
+<!-- 2. Registro -->
+<section id="screen-registro" class="screen" data-screen="registro" data-fan-step="2">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="entrada" aria-label="Volver">←</button>
+<h2>Registro</h2>
+</header>
+<div class="screen-body">
+<p class="muted small">Datos mínimos para el piloto. Campos de demostración.</p>
+<label class="field">
+<span class="field-label">Nombre completo</span>
+<input type="text" id="regNombre" class="input" value="Andrés Demo" autocomplete="name" />
+</label>
+<label class="field">
+<span class="field-label">Documento (CC)</span>
+<input type="text" id="regDoc" class="input" value="1.234.567.890" inputmode="numeric" />
+</label>
+<label class="field">
+<span class="field-label">Celular</span>
+<input type="tel" id="regCel" class="input" value="300 123 4567" />
+</label>
+<label class="field">
+<span class="field-label">Correo</span>
+<input type="email" id="regEmail" class="input" value="demo@fanect.co" />
+</label>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" id="btnRegistro">Continuar</button>
+</div>
+</section>
+<!-- 3. Consentimientos -->
+<section id="screen-consentimientos" class="screen" data-screen="consentimientos" data-fan-step="3">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="registro" aria-label="Volver">←</button>
+<h2>Consentimientos</h2>
+</header>
+<div class="screen-body">
+<p class="muted small">Cada propósito por separado. No hay “aceptar todo”.</p>
+<div class="consent-list">
+<label class="consent-item">
+<div class="consent-text">
+<strong>Identidad</strong>
+<span>Verificar mi identidad para el Fan Pass del evento (tratamiento de datos de identificación).</span>
+</div>
+<input type="checkbox" id="consentId" class="toggle" />
+</label>
+<label class="consent-item">
+<div class="consent-text">
+<strong>Acceso al evento</strong>
+<span>Vincular boleta nominativa y generar QR de ingreso; registro de validaciones en puerta.</span>
+</div>
+<input type="checkbox" id="consentAcceso" class="toggle" />
+</label>
+<label class="consent-item">
+<div class="consent-text">
+<strong>Comunicaciones</strong>
+<span>Recibir avisos del evento y del piloto (opcional; no bloquea el acceso).</span>
+</div>
+<input type="checkbox" id="consentComms" class="toggle" />
+</label>
+</div>
+<p class="hint" id="consentHint">Debes aceptar Identidad y Acceso para continuar.</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" id="btnConsent" disabled>Continuar</button>
+</div>
+</section>
+<!-- 4. Verificación identidad -->
+<section id="screen-verificacion" class="screen" data-screen="verificacion" data-fan-step="4">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="consentimientos" aria-label="Volver">←</button>
+<h2>Verificación de identidad</h2>
+</header>
+<div class="screen-body">
+<p class="muted small">Elige cómo verificar. En P0 la ruta biométrica es mock; la asistida no biométrica es la rama real del piloto.</p>
+<div class="choice-cards">
+<button type="button" class="choice-card" id="choiceProvider">
+<span class="choice-title">Proveedor de identidad</span>
+<span class="choice-desc">Flujo mock de verificación con proveedor (futuro integrado).</span>
+<span class="badge badge-sim">SIMULADO</span>
+</button>
+<button type="button" class="choice-card choice-card-accent" id="choiceAsistida">
+<span class="choice-title">Ruta asistida no biométrica</span>
+<span class="choice-desc">Validación manual asistida: documento + selfie de control (sin matching 1:N).</span>
+<span class="badge badge-ok">RAMA P0</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 4b. Ruta asistida (branch) -->
+<section id="screen-asistida" class="screen" data-screen="asistida" data-fan-step="4">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
+<h2>Ruta asistida</h2>
+</header>
+<div class="screen-body">
+<div class="info-card">
+<p><strong>Pasos del operador de verificación</strong> (sin biometría 1:N):</p>
+<ol class="steps-list">
+<li>Captura / carga de documento (CC)</li>
+<li>Selfie de control (archivo, no matching facial)</li>
+<li>Revisión asistida por agente del piloto</li>
+</ol>
+</div>
+<label class="field">
+<span class="field-label">Documento (foto) <span class="badge badge-sim">SIMULADO</span></span>
+<div class="fake-upload" id="uploadDoc">📄 Documento cargado · CC demo</div>
+</label>
+<label class="field">
+<span class="field-label">Selfie de control <span class="badge badge-sim">SIMULADO</span></span>
+<div class="fake-upload" id="uploadSelfie">📷 Selfie de control · lista</div>
+</label>
+<label class="field">
+<span class="field-label">Estado revisión</span>
+<select id="asistidaEstado" class="input">
+<option value="pendiente">Pendiente de revisión</option>
+<option value="aprobado" selected>Aprobado por agente</option>
+<option value="rechazado">Rechazado</option>
+</select>
+</label>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" id="btnAsistida">Enviar a verificación</button>
+</div>
+</section>
+<!-- 4c. Proveedor mock -->
+<section id="screen-proveedor" class="screen" data-screen="proveedor" data-fan-step="4">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
+<h2>Proveedor (mock)</h2>
+</header>
+<div class="screen-body centered">
+<div class="spinner" id="provSpinner" aria-hidden="true"></div>
+<p id="provText">Conectando con proveedor de identidad…</p>
+<p class="hint"><span class="badge badge-sim">SIMULADO</span> No hay integración real.</p>
+</div>
+</section>
+<!-- 5. Resultado verificación -->
+<section id="screen-resultado" class="screen" data-screen="resultado" data-fan-step="5">
+<header class="screen-header">
+<h2>Resultado</h2>
+</header>
+<div class="screen-body centered">
+<div class="result-icon success" aria-hidden="true">✓</div>
+<h3 id="resultadoTitulo">Identidad verificada</h3>
+<p class="muted" id="resultadoDesc">Tu identidad fue confirmada para este evento.</p>
+<div class="kv-card" id="resultadoMeta"></div>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" data-go="fanpass">Activar Fan Pass</button>
+</div>
+</section>
+<!-- 6. Fan Pass activado -->
+<section id="screen-fanpass" class="screen" data-screen="fanpass" data-fan-step="6">
+<header class="screen-header">
+<h2>Fan Pass</h2>
+</header>
+<div class="screen-body">
+<div class="pass-card">
+<div class="pass-top">
+<span class="pass-brand">FANECT</span>
+<span class="badge badge-ok">ACTIVO</span>
+</div>
+<h3 id="passNombre">Andrés Demo</h3>
+<p class="muted">Evento demo — Club Alpha</p>
+<div class="pass-id">FP-<span id="passId">A1B2C3</span></div>
+</div>
+<p class="hint">Siguiente: vincular tu boleta nominativa al Fan Pass.</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" data-go="boleta">Vincular boleta</button>
+</div>
+</section>
+<!-- 7. Vincular boleta -->
+<section id="screen-boleta" class="screen" data-screen="boleta" data-fan-step="7">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="fanpass" aria-label="Volver">←</button>
+<h2>Vincular boleta</h2>
+</header>
+<div class="screen-body">
+<p class="muted small"><span class="badge badge-sim">SIMULADOR</span> Elige una boleta nominativa de demo.</p>
+<div class="ticket-list" id="ticketList" role="listbox" aria-label="Boletas disponibles"></div>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" id="btnVincular" disabled>Vincular boleta seleccionada</button>
+</div>
+</section>
+<!-- 8. Pase + QR dinámico -->
+<section id="screen-pase" class="screen" data-screen="pase" data-fan-step="8">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="hincha-home" aria-label="Inicio hincha">⌂</button>
+<h2>Tu pase</h2>
+</header>
+<div class="screen-body">
+<div class="qr-card">
+<div class="qr-meta">
+<span id="paseSector">Tribuna Norte · Fila 12 · Asiento 08</span>
+<span class="badge badge-ok" id="paseEstado">VÁLIDO</span>
+</div>
+<div class="qr-box" id="qrBox" aria-label="Código QR dinámico">
+<canvas id="qrCanvas" width="200" height="200"></canvas>
+</div>
+<div class="ttl-row">
+<span>TTL del QR</span>
+<strong id="qrTtl">45 s</strong>
+</div>
+<p class="mono small" id="qrPayload">qr:…</p>
+</div>
+<p class="footnote">Muestra este QR en la puerta. La validación se hace en la App Operador (producto aparte).</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-secondary btn-block" id="btnRotar">Rotar QR (simulado)</button>
+<button type="button" class="btn btn-ghost btn-block" data-go="hub">Cambiar de app</button>
+</div>
+</section>
+<!-- APP OPERADOR: home -->
+<section id="screen-operador-home" class="screen" data-screen="operador-home">
+<header class="screen-header">
+<h2>App Operador</h2>
+<span class="badge badge-app badge-app-op">OPERADOR</span>
+</header>
+<div class="screen-body">
+<div class="info-card session-card">
+<div class="event-badge">SESIÓN DE PUERTA · SIMULADO</div>
+<h3>Operador Demo</h3>
+<dl class="session-meta">
+<div><dt>Puerta / gate</dt><dd>Norte A · Acceso 3</dd></div>
+<div><dt>Evento</dt><dd>Evento demo — Club Alpha</dd></div>
+<div><dt>Turno</dt><dd>20:00 – 22:30</dd></div>
+</dl>
+<span class="badge badge-sim">SIMULADO</span>
+</div>
+<p class="muted small">Escanea el QR del hincha y registra la decisión de ingreso. Esta app es independiente del flujo hincha.</p>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" data-go="scanner">Abrir escáner</button>
+<button type="button" class="btn btn-ghost btn-block" data-go="hub">Cambiar de app</button>
+</div>
+</section>
+<!-- 9. Scanner -->
+<section id="screen-scanner" class="screen" data-screen="scanner">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="operador-home" aria-label="Volver">←</button>
+<h2>Escáner de acceso</h2>
+</header>
+<div class="screen-body">
+<div class="scanner-view">
+<div class="scanner-frame"></div>
+<p class="muted small">Vista cámara · <span class="badge badge-sim">SIMULADO</span></p>
+</div>
+<p class="field-label">Estado del QR a escanear (demo)</p>
+<div class="state-grid" id="stateGrid">
+<button type="button" class="state-btn" data-qr-state="valido">Válido</button>
+<button type="button" class="state-btn" data-qr-state="usado">Usado</button>
+<button type="button" class="state-btn" data-qr-state="expirado">Expirado</button>
+<button type="button" class="state-btn" data-qr-state="replay">Replay</button>
+</div>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" id="btnScan" disabled>Escanear QR seleccionado</button>
+</div>
+</section>
+<!-- 10. Decisión -->
+<section id="screen-decision" class="screen" data-screen="decision">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="scanner" aria-label="Volver">←</button>
+<h2>Decisión de acceso</h2>
+</header>
+<div class="screen-body centered">
+<div id="decisionBanner" class="decision-banner"></div>
+<div class="kv-card" id="decisionMeta"></div>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-primary btn-block" id="btnAuditoria">Ver mini auditoría</button>
+<button type="button" class="btn btn-ghost btn-block" data-go="scanner">Escanear otro</button>
+</div>
+</section>
+<!-- 11. Mini auditoría -->
+<section id="screen-auditoria" class="screen" data-screen="auditoria">
+<header class="screen-header">
+<button type="button" class="btn-icon" data-go="decision" aria-label="Volver">←</button>
+<h2>Mini auditoría</h2>
+</header>
+<div class="screen-body">
+<p class="muted small">Correlación mínima: hincha ↔ boleta ↔ QR ↔ decisión.</p>
+<div class="audit-card" id="auditCard"></div>
+</div>
+<div class="screen-actions">
+<button type="button" class="btn btn-secondary btn-block" data-go="operador-home">Volver a inicio operador</button>
+<button type="button" class="btn btn-ghost btn-block" data-go="hub">Cambiar de app</button>
+</div>
+</section>
+<!-- Tab bar: Hincha only -->
+<nav id="tabBarHincha" class="tab-bar tab-bar-hincha" aria-label="Navegación App Hincha" hidden>
+<button type="button" class="tab-item is-active" data-go="hincha-home" data-nav="hincha-home" aria-current="page">
+<span class="tab-icon" aria-hidden="true">◆</span>
+<span class="tab-label">Inicio</span>
+</button>
+<button type="button" class="tab-item" data-go="pase" data-nav="pase">
+<span class="tab-icon" aria-hidden="true">◆</span>
+<span class="tab-label">Pase</span>
+</button>
+</nav>
+<!-- Tab bar: Operador only -->
+<nav id="tabBarOperador" class="tab-bar tab-bar-operador" aria-label="Navegación App Operador" hidden>
+<button type="button" class="tab-item" data-go="operador-home" data-nav="operador-home">
+<span class="tab-icon" aria-hidden="true">◆</span>
+<span class="tab-label">Inicio</span>
+</button>
+<button type="button" class="tab-item" data-go="scanner" data-nav="scanner">
+<span class="tab-icon" aria-hidden="true">◆</span>
+<span class="tab-label">Escáner</span>
+</button>
+</nav>
+</div>
+<script src="app.js"></script>
 </body>
 </html>
