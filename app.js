@@ -114,6 +114,23 @@
   }
 
   // ——— Navigation ———
+
+  function navKeyFor(screen) {
+    if (screen === "scanner" || screen === "decision" || screen === "auditoria") return "scanner";
+    if (screen === "pase" || screen === "fanpass" || screen === "boleta") return "pase";
+    return "home";
+  }
+
+  function syncTabBar(screen) {
+    const key = navKeyFor(screen);
+    $all(".tab-item").forEach((btn) => {
+      const on = btn.getAttribute("data-nav") === key;
+      btn.classList.toggle("is-active", on);
+      if (on) btn.setAttribute("aria-current", "page");
+      else btn.removeAttribute("aria-current");
+    });
+  }
+
   function go(name) {
     const next = document.getElementById("screen-" + name);
     if (!next) {
@@ -122,6 +139,7 @@
     }
     $all(".screen").forEach((s) => s.classList.remove("active"));
     next.classList.add("active");
+    syncTabBar(name);
     state.screen = name;
     updateProgress(name);
     onEnter(name);
