@@ -617,10 +617,11 @@ body {
   transition: background .18s ease, color .18s ease, box-shadow .18s ease;
 }
 .tab-label {
-  font-size: .68rem;
+  font-size: .62rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0;
   line-height: 1;
+  white-space: nowrap;
 }
 .tab-item:hover { color: var(--text); }
 .tab-item.is-active {
