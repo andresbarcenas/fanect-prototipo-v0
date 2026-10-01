@@ -15,7 +15,7 @@ Prototipo estático clicable (HTML/CSS/JS) para demo institucional. El MVP se pr
 | Contexto | Pantalla de entrada | Tab bar |
 |----------|---------------------|---------|
 | **Hub** | `hub` | Oculta |
-| **App Hincha** | `hincha-home` | Inicio · Pase |
+| **App Hincha** | `hincha-home` | Inicio · Pase · Beneficios · Perfil |
 | **App Operador** | `operador-home` | Inicio · Escáner |
 
 Desde el hub solo hay dos entradas: **App Hincha** y **App Operador**. «Cambiar de app» vuelve al hub. El QR del hincha **no** enlaza al escáner.
@@ -55,7 +55,7 @@ Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en mar
 
 | # | ID | Descripción |
 |---|-----|-------------|
-| — | `hincha-home` | Home corto + CTA «Entrar al evento» |
+| — | `hincha-home` | Primera visita: CTA «Entrar al evento». Con Fan Pass en `localStorage`: tablero (pase, categoría, última asistencia) |
 | 1 | `entrada` | Código/link del evento (Club Alpha demo) |
 | 2 | `registro` | Nombre, CC, celular, correo |
 | 3 | `consentimientos` | Identidad / Acceso / Comunicaciones |
@@ -65,7 +65,12 @@ Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en mar
 | 5 | `resultado` | Identidad verificada |
 | 6 | `fanpass` | Fan Pass activo |
 | 7 | `boleta` | Vincular boleta nominativa |
-| 8 | `pase` | QR dinámico + TTL (sin salto a operador) |
+| 8 | `pase` | QR dinámico + TTL, chip de categoría y acceso a beneficios (sin salto a operador) |
+| — | `perfil` | Iniciales, datos enmascarados, Fan Pass, FP-ID, chips de consentimiento |
+| — | `historial` | Partidos asistidos de demostración y contador de temporada |
+| — | `categoria` | Hincha verificado · Piloto, progreso hacia Frecuente, beneficios abiertos y cerrados |
+| — | `beneficios` | QR, avisos, fila preferencial y servicios futuros (merch, contenido, apuestas) |
+| — | `privacidad` | Datos de acceso fuera de publicidad, comunicaciones y acceso rápido opcionales |
 
 ### App Operador
 
@@ -83,11 +88,14 @@ Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en mar
 1. En el **hub**, abrir **App Hincha** → Entrar al evento  
 2. Registro (precargado) → consentimientos Identidad + Acceso → Continuar  
 3. **Ruta asistida no biométrica** → «Aprobado por agente» → Enviar  
-4. Activar Fan Pass → Vincular boleta → ver pase + QR (rotar TTL)  
-5. **Cambiar de app** → hub → **App Operador** → Abrir escáner  
-6. Probar los 4 estados → decisión → mini auditoría  
+4. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta → ver pase + QR (rotar TTL)  
+5. Con el Fan Pass guardado, **Inicio** muestra el tablero. Recorrido del slide: **Perfil** → historial / categoría / privacidad, **Pase**, **Beneficios**  
+6. **Cambiar de app** → hub → **App Operador** → Abrir escáner  
+7. Probar los 4 estados → decisión → mini auditoría  
 
-Consola: `FanectDemo.reset()` · `FanectDemo.go('pase')` · `FanectDemo.state.app`
+Para volver al home de primera visita: `FanectDemo.reset()`.
+
+Consola: `FanectDemo.reset()` · `FanectDemo.go('perfil')` · `FanectDemo.state.app`
 
 ---
 

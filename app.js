@@ -33,6 +33,11 @@
     fanpass: true,
     boleta: true,
     pase: true,
+    perfil: true,
+    historial: true,
+    categoria: true,
+    beneficios: true,
+    privacidad: true,
   };
   const OPERADOR_SCREENS = {
     "operador-home": true,
@@ -40,6 +45,53 @@
     decision: true,
     auditoria: true,
   };
+
+  const CATEGORY_NAME = "Hincha verificado · Piloto";
+  const CATEGORY_NEXT = "Frecuente";
+  const CATEGORY_GOAL = 5;
+  const HISTORY = [
+    {
+      rival: "Club Alpha vs Rival Norte",
+      stadium: "Estadio Demo",
+      city: "Bogotá",
+      date: "12 sep 2026",
+      sector: "Tribuna Norte",
+      season: true,
+    },
+    {
+      rival: "Club Alpha vs Rival Sur",
+      stadium: "Estadio Demo",
+      city: "Bogotá",
+      date: "20 ago 2026",
+      sector: "Occidental",
+      season: true,
+    },
+    {
+      rival: "Amistoso Demo",
+      stadium: "Estadio Demo",
+      city: "Bogotá",
+      date: "2 ago 2026",
+      sector: "General",
+      season: true,
+    },
+    {
+      rival: "Club Alpha vs Rival Costa",
+      stadium: "Estadio Demo",
+      city: "Bogotá",
+      date: "15 nov 2025",
+      sector: "Tribuna Sur",
+      season: false,
+    },
+  ];
+  const TIER_UNLOCKED = [
+    { title: "Fan Pass del evento", desc: "Identidad confirmada para este piloto" },
+    { title: "QR de ingreso", desc: "Boleta nominativa y pase dinámico" },
+    { title: "Fila preferencial", desc: "Mock de categoría · beneficio de demostración" },
+  ];
+  const TIER_LOCKED = [
+    { title: "Hincha frecuente", desc: "Se abre al llegar a 5 asistencias de temporada" },
+    { title: "Experiencias de temporada", desc: "Servicio futuro del piloto" },
+  ];
 
   const TICKETS = [
     { id: "T-NORTE-12-08", sector: "Tribuna Norte", fila: "12", asiento: "08", titular: "Andrés Demo" },
@@ -85,6 +137,9 @@
     doc: "1.234.567.890",
     cel: "300 123 4567",
     email: "demo@fanect.co",
+    consents: { identidad: false, acceso: false, comms: false },
+    prefs: { noAds: true, accesoRapido: false },
+    consentsKnown: false,
     verifyPath: null,
     passId: null,
     ticket: null,
@@ -122,9 +177,15 @@
     try {
       localStorage.setItem("fanect_p0", JSON.stringify({
         nombre: state.nombre,
+        doc: state.doc,
+        cel: state.cel,
+        email: state.email,
         passId: state.passId,
         ticket: state.ticket,
         verifyPath: state.verifyPath,
+        consents: state.consents,
+        prefs: state.prefs,
+        consentsKnown: state.consentsKnown,
         auditLog: state.auditLog.slice(-20),
       }));
     } catch (_) {}
@@ -135,9 +196,23 @@
       if (!raw) return;
       const d = JSON.parse(raw);
       if (d.nombre) state.nombre = d.nombre;
+      if (d.doc) state.doc = d.doc;
+      if (d.cel) state.cel = d.cel;
+      if (d.email) state.email = d.email;
       if (d.passId) state.passId = d.passId;
       if (d.ticket) state.ticket = d.ticket;
       if (d.verifyPath) state.verifyPath = d.verifyPath;
+      if (d.consents && typeof d.consents === "object") {
+        state.consents = Object.assign(state.consents, d.consents);
+        state.consentsKnown = true;
+      } else if (d.passId) {
+        state.consents.identidad = true;
+        state.consents.acceso = true;
+      }
+      if (d.consentsKnown) state.consentsKnown = true;
+      if (d.prefs && typeof d.prefs === "object") {
+        state.prefs = Object.assign(state.prefs, d.prefs);
+      }
       if (Array.isArray(d.auditLog)) state.auditLog = d.auditLog;
     } catch (_) {}
   }
@@ -151,6 +226,10 @@
 
   function navKeyFor(screen) {
     if (screen === "pase" || screen === "fanpass" || screen === "boleta") return "pase";
+    if (screen === "beneficios") return "beneficios";
+    if (screen === "perfil" || screen === "historial" || screen === "categoria" || screen === "privacidad") {
+      return "perfil";
+    }
     if (screen === "scanner" || screen === "decision" || screen === "auditoria") return "scanner";
     if (screen === "operador-home") return "operador-home";
     if (screen === "hincha-home" || HINCHA_SCREENS[screen]) return "hincha-home";
@@ -211,13 +290,22 @@
   }
 
   function onEnter(name) {
+    if (name === "hincha-home") renderHinchaHome();
     if (name === "registro") {
       $("#regNombre").value = state.nombre;
       $("#regDoc").value = state.doc;
       $("#regCel").value = state.cel;
       $("#regEmail").value = state.email;
     }
-    if (name === "consentimientos") syncConsentBtn();
+    if (name === "consentimientos") {
+      writeConsentForm();
+      syncConsentBtn();
+    }
+    if (name === "perfil") renderPerfil();
+    if (name === "historial") renderHistorial();
+    if (name === "categoria") renderCategoria();
+    if (name === "beneficios") renderBeneficios();
+    if (name === "privacidad") renderPrivacidad();
     if (name === "resultado") renderResultado();
     if (name === "fanpass") renderFanPass();
     if (name === "boleta") renderTickets();
@@ -244,6 +332,25 @@
     $("#consentHint").textContent = ok
       ? "Identidad y Acceso aceptados. Comunicaciones es opcional."
       : "Debes aceptar Identidad y Acceso para continuar.";
+  }
+
+  function readConsentForm() {
+    state.consents.identidad = $("#consentId").checked;
+    state.consents.acceso = $("#consentAcceso").checked;
+    state.consents.comms = $("#consentComms").checked;
+    state.consentsKnown = true;
+    save();
+  }
+
+  function writeConsentForm() {
+    $("#consentId").checked = !!state.consents.identidad;
+    $("#consentAcceso").checked = !!state.consents.acceso;
+    $("#consentComms").checked = !!state.consents.comms;
+  }
+
+  function onConsentChange() {
+    readConsentForm();
+    syncConsentBtn();
   }
 
   function submitRegistro() {
@@ -322,7 +429,12 @@
       escapeHtml(pathLabel) +
       "</dd>" +
       "<dt>Evento</dt><dd>Evento demo — Club Alpha</dd>" +
+      "<dt>Categoría</dt><dd>" +
+      escapeHtml(CATEGORY_NAME) +
+      "</dd>" +
       "</dl>";
+    const tier = $("#resultadoTier");
+    if (tier) tier.textContent = CATEGORY_NAME;
   }
 
   function escapeHtml(s) {
@@ -340,6 +452,8 @@
     }
     $("#passNombre").textContent = state.nombre;
     $("#passId").textContent = state.passId;
+    const tier = $("#fanpassTier");
+    if (tier) tier.textContent = CATEGORY_NAME;
   }
 
   function renderTickets() {
@@ -416,6 +530,8 @@
     $("#paseEstado").textContent = "VÁLIDO";
     $("#qrPayload").textContent = qrPayload();
     drawQrPattern($("#qrCanvas"), state.qrNonce + String(state.qrRotation));
+    const tier = $("#paseTierSub");
+    if (tier) tier.textContent = CATEGORY_NAME;
     updateTtlDisplay();
   }
 
@@ -589,6 +705,288 @@
       "</dl>";
   }
 
+  function hasPass() {
+    return !!state.passId;
+  }
+
+  function seasonMatches() {
+    return HISTORY.filter((m) => m.season);
+  }
+
+  function firstName(nombre) {
+    const part = String(nombre || "").trim().split(/\s+/)[0];
+    return part || "hincha";
+  }
+
+  function initials(nombre) {
+    const parts = String(nombre || "").trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "HD";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
+
+  function maskDoc(doc) {
+    const digits = String(doc || "").replace(/\D/g, "");
+    return "CC ···· " + (digits.slice(-3) || "•••");
+  }
+
+  function maskPhone(cel) {
+    const digits = String(cel || "").replace(/\D/g, "");
+    return "··· ··· " + (digits.slice(-4) || "••••");
+  }
+
+  function maskEmail(email) {
+    const raw = String(email || "");
+    const at = raw.indexOf("@");
+    if (at < 1) return "•••@•••";
+    return raw.charAt(0) + "•••" + raw.slice(at);
+  }
+
+  function chip(label, on) {
+    return (
+      '<span class="chip ' +
+      (on ? "on" : "off") +
+      '">' +
+      (on ? "✓ " : "✗ ") +
+      escapeHtml(label) +
+      "</span>"
+    );
+  }
+
+  function renderHinchaHome() {
+    const ready = hasPass();
+    const body = $("#hinchaBody");
+    $("#hinchaLauncher").hidden = ready;
+    $("#hinchaDash").hidden = !ready;
+    $("#hinchaActionsLauncher").hidden = ready;
+    $("#hinchaActionsDash").hidden = !ready;
+    if (body) {
+      body.classList.toggle("centered", !ready);
+      body.classList.toggle("home-body", !ready);
+    }
+    if (!ready) return;
+    $("#dashNombre").textContent = "Hola, " + firstName(state.nombre);
+    $("#dashEvento").textContent = "Evento demo — Club Alpha · Estadio Demo";
+    const t = state.ticket;
+    $("#dashPaseSub").textContent = t
+      ? "FP-" + state.passId + " · " + t.sector + " · Fila " + t.fila
+      : "FP-" + state.passId + " · QR de ingreso";
+    $("#dashTierTitle").textContent = CATEGORY_NAME;
+    const n = seasonMatches().length;
+    $("#dashTierSub").textContent = n + " de " + CATEGORY_GOAL + " hacia " + CATEGORY_NEXT;
+    const last = seasonMatches()[0];
+    $("#dashLastTitle").textContent = last ? last.rival : "Última asistencia";
+    $("#dashLastSub").textContent = last
+      ? last.date + " · " + last.sector + " · Asistí"
+      : "Sin asistencias de la temporada";
+  }
+
+  function renderPerfil() {
+    const ready = hasPass();
+    $("#perfilIniciales").textContent = initials(state.nombre);
+    $("#perfilNombre").textContent = state.nombre;
+    $("#perfilEvento").textContent = "Evento demo — Club Alpha · Estadio Demo · Bogotá";
+    $("#perfilDoc").textContent = maskDoc(state.doc);
+    $("#perfilCel").textContent = maskPhone(state.cel);
+    $("#perfilEmail").textContent = maskEmail(state.email);
+    $("#perfilPassBadge").innerHTML = ready
+      ? '<span class="badge badge-ok">FAN PASS ACTIVO</span>'
+      : '<span class="badge badge-sim">FAN PASS PENDIENTE</span>';
+    const fp = $("#perfilFp");
+    fp.textContent = ready ? "FP-" + state.passId : "Sin Fan Pass";
+    fp.classList.toggle("is-pending", !ready);
+    $("#perfilChips").innerHTML =
+      chip("Identidad", state.consents.identidad) +
+      chip("Acceso", state.consents.acceso) +
+      chip("Comunicaciones", state.consents.comms);
+    const n = seasonMatches().length;
+    $("#perfilHistorialSub").textContent = ready
+      ? n + " partidos esta temporada"
+      : "Se activa con el Fan Pass";
+    $("#perfilTierLabel").textContent = ready ? CATEGORY_NAME : "Aún sin categoría";
+    const cta = $("#perfilCtaPase");
+    cta.textContent = ready ? "Ver mi pase" : "Entrar al evento";
+    cta.setAttribute("data-go", ready ? "pase" : "entrada");
+  }
+
+  function renderHistorial() {
+    const ready = hasPass();
+    $("#historialFilled").hidden = !ready;
+    $("#historialEmpty").hidden = ready;
+    $("#historialActionsEmpty").hidden = ready;
+    if (!ready) return;
+    const season = seasonMatches();
+    $("#historialCount").textContent = String(season.length);
+    const list = $("#historialList");
+    list.innerHTML = "";
+    HISTORY.forEach((m) => {
+      const article = document.createElement("article");
+      article.className = "history-item";
+      article.innerHTML =
+        '<div class="history-top"><h3>' +
+        escapeHtml(m.rival) +
+        "</h3>" +
+        (m.season
+          ? ""
+          : '<span class="badge badge-lock">Temporada anterior</span>') +
+        "</div>" +
+        '<p class="history-meta">' +
+        escapeHtml(m.stadium + " · " + m.city) +
+        "</p>" +
+        '<p class="history-meta">' +
+        escapeHtml(m.date + " · " + m.sector) +
+        "</p>" +
+        '<p class="attend-pill">Asistí · QR validado</p>';
+      list.appendChild(article);
+    });
+  }
+
+  function unlockItem(item, on) {
+    return (
+      '<li class="unlock-item"><span class="unlock-mark ' +
+      (on ? "on" : "off") +
+      '" aria-hidden="true">' +
+      (on ? "✓" : "–") +
+      "</span><div><strong>" +
+      escapeHtml(item.title) +
+      "</strong><span>" +
+      escapeHtml(item.desc) +
+      "</span></div></li>"
+    );
+  }
+
+  function renderCategoria() {
+    const ready = hasPass();
+    const n = ready ? seasonMatches().length : 0;
+    const nombre = $("#categoriaNombre");
+    const next = $("#categoriaNext");
+    const label = $("#tierProgressLabel");
+    const goal = $("#tierGoalLabel");
+    const fill = $("#tierFill");
+    const bar = $("#tierBar");
+    nombre.textContent = ready ? CATEGORY_NAME : "Sin Fan Pass";
+    next.textContent = ready
+      ? "Siguiente nivel: " + CATEGORY_NEXT
+      : "La categoría del piloto aparece al activar el Fan Pass.";
+    label.textContent = n + " de " + CATEGORY_GOAL + " asistencias";
+    goal.textContent = CATEGORY_NEXT;
+    const pct = Math.max(0, Math.min(100, Math.round((n / CATEGORY_GOAL) * 100)));
+    fill.style.width = pct + "%";
+    if (bar) {
+      bar.setAttribute("aria-valuenow", String(n));
+      bar.setAttribute("aria-valuemax", String(CATEGORY_GOAL));
+      bar.setAttribute(
+        "aria-label",
+        n + " de " + CATEGORY_GOAL + " asistencias hacia " + CATEGORY_NEXT
+      );
+    }
+    $("#tierUnlocked").innerHTML = ready
+      ? TIER_UNLOCKED.map((item) => unlockItem(item, true)).join("")
+      : '<li class="unlock-item"><span class="unlock-mark off" aria-hidden="true">–</span><div><strong>Nada desbloqueado</strong><span>Entra al evento y activa el Fan Pass.</span></div></li>';
+    const locked = ready ? TIER_LOCKED : TIER_UNLOCKED.concat(TIER_LOCKED);
+    $("#tierLocked").innerHTML = locked.map((item) => unlockItem(item, false)).join("");
+  }
+
+  function benefitCards() {
+    const ready = hasPass();
+    const comms = !!state.consents.comms;
+    return [
+      {
+        title: "QR de ingreso",
+        desc: "Pase dinámico para la puerta del evento.",
+        status: ready ? "Disponible" : "Requiere Fan Pass",
+        kind: ready ? "ok" : "lock",
+        featured: true,
+        go: ready ? "pase" : "entrada",
+      },
+      {
+        title: "Avisos del evento",
+        desc: "Comunicaciones del piloto, según tu permiso.",
+        status: comms ? "Disponible" : "Requiere permiso",
+        kind: comms ? "ok" : "soon",
+        go: "privacidad",
+      },
+      {
+        title: "Fila preferencial",
+        desc: "Mock ligado a la categoría verificada.",
+        status: ready ? "Disponible" : "Requiere categoría",
+        kind: ready ? "ok" : "lock",
+        go: "categoria",
+      },
+      {
+        title: "Merch",
+        desc: "Descuentos de tienda. Servicio futuro.",
+        status: "Próximamente",
+        kind: "soon",
+      },
+      {
+        title: "Contenido",
+        desc: "Contenido exclusivo. Servicio futuro.",
+        status: "Próximamente",
+        kind: "soon",
+      },
+      {
+        title: "Apuestas",
+        desc: "Sin cuotas ni pagos en este piloto.",
+        status: "Próximamente",
+        kind: "soon",
+      },
+    ];
+  }
+
+  function renderBeneficios() {
+    const grid = $("#beneficiosGrid");
+    grid.innerHTML = "";
+    benefitCards().forEach((b) => {
+      const el = document.createElement(b.go ? "button" : "article");
+      el.className = "benefit-card" + (b.featured ? " featured" : "") + (b.kind === "soon" && !b.go ? " soon" : "");
+      if (b.go) {
+        el.type = "button";
+        el.setAttribute("data-go", b.go);
+      }
+      const badgeClass = b.kind === "ok" ? "badge-ok" : b.kind === "lock" ? "badge-lock" : "badge-soon";
+      el.innerHTML =
+        '<span class="badge ' +
+        badgeClass +
+        '">' +
+        escapeHtml(b.status) +
+        "</span><h3>" +
+        escapeHtml(b.title) +
+        "</h3><p>" +
+        escapeHtml(b.desc) +
+        "</p>";
+      grid.appendChild(el);
+    });
+  }
+
+  function updatePrivacyCopy() {
+    const noAds = $("#prefNoAdsCopy");
+    const comms = $("#prefCommsCopy");
+    const rapido = $("#prefRapidoCopy");
+    if (noAds) {
+      noAds.textContent = state.prefs.noAds
+        ? "Protegido en el piloto: los datos de acceso no alimentan anuncios ni se venden."
+        : "Preferencia simulada para permitir publicidad. En este piloto igual no hay anuncios ni venta de datos.";
+    }
+    if (comms) {
+      comms.textContent = state.consents.comms
+        ? "Avisos activados para el evento demo. Puedes apagarlos cuando quieras."
+        : "Avisos apagados. El ingreso con QR o documento sigue igual.";
+    }
+    if (rapido) {
+      rapido.textContent = state.prefs.accesoRapido
+        ? "Atajo activo (simulado). El QR y el documento en la ruta asistida siguen disponibles. Sin reconocimiento facial en la puerta."
+        : "Apagado. Entras con el QR del Fan Pass o con documento en la ruta asistida. Sin reconocimiento facial en la puerta.";
+    }
+  }
+
+  function renderPrivacidad() {
+    $("#prefNoAds").checked = !!state.prefs.noAds;
+    $("#prefComms").checked = !!state.consents.comms;
+    $("#prefRapido").checked = !!state.prefs.accesoRapido;
+    updatePrivacyCopy();
+  }
+
   function tickClock() {
     const el = $("#statusTime");
     if (!el) return;
@@ -635,11 +1033,32 @@
     });
 
     $("#btnRegistro").addEventListener("click", submitRegistro);
-    $("#consentId").addEventListener("change", syncConsentBtn);
-    $("#consentAcceso").addEventListener("change", syncConsentBtn);
-    $("#consentComms").addEventListener("change", syncConsentBtn);
+    $("#consentId").addEventListener("change", onConsentChange);
+    $("#consentAcceso").addEventListener("change", onConsentChange);
+    $("#consentComms").addEventListener("change", onConsentChange);
+    $("#prefNoAds").addEventListener("change", () => {
+      state.prefs.noAds = $("#prefNoAds").checked;
+      save();
+      updatePrivacyCopy();
+    });
+    $("#prefComms").addEventListener("change", () => {
+      state.consents.comms = $("#prefComms").checked;
+      state.consentsKnown = true;
+      const box = $("#consentComms");
+      if (box) box.checked = state.consents.comms;
+      save();
+      updatePrivacyCopy();
+    });
+    $("#prefRapido").addEventListener("change", () => {
+      state.prefs.accesoRapido = $("#prefRapido").checked;
+      save();
+      updatePrivacyCopy();
+    });
     $("#btnConsent").addEventListener("click", () => {
-      if ($("#consentId").checked && $("#consentAcceso").checked) go("verificacion");
+      if ($("#consentId").checked && $("#consentAcceso").checked) {
+        readConsentForm();
+        go("verificacion");
+      }
     });
     $("#choiceAsistida").addEventListener("click", startAsistida);
     $("#choiceProvider").addEventListener("click", startProveedor);
