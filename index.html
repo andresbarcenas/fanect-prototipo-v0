@@ -1,10 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="umbral">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-<meta name="theme-color" content="#070707" />
+<meta name="theme-color" content="#121a24" />
 <title>FANECT — Tribuna Segura · prototipo</title>
+<script>
+/* Default theme is umbral. Restore the last route before CSS paints. */
+(function () {
+  try {
+    var t = localStorage.getItem("fanect_theme");
+    if (t === "umbral" || t === "vinculo" || t === "pulso") {
+      document.documentElement.setAttribute("data-theme", t);
+    }
+  } catch (e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -17,6 +28,14 @@
 <span class="status-time" id="statusTime">16:17</span>
 <span class="status-icons">●●● ▮</span>
 </div>
+<div class="theme-switch">
+<div class="theme-switch-options" role="radiogroup" aria-label="Ruta de marca provisional. Sin tagline ni aval institucional.">
+<button type="button" class="is-active" role="radio" aria-checked="true" data-theme-choice="umbral">UMBRAL</button>
+<button type="button" role="radio" aria-checked="false" data-theme-choice="vinculo">VÍNCULO</button>
+<button type="button" role="radio" aria-checked="false" data-theme-choice="pulso">PULSO</button>
+</div>
+<p class="theme-switch-note">Marca provisional. Sin tagline ni aval institucional.</p>
+</div>
 <!-- Progress (fan flow only) -->
 <div id="progressBar" class="progress-bar" hidden>
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
@@ -27,14 +46,32 @@
 <div class="screen-body centered home-body">
 <div class="brand-block">
 <div class="logo-mark" aria-hidden="true">
-<img src="assets/fanect-mark.svg" alt="" width="64" height="64" />
+<svg class="mark mark-umbral" viewBox="0 0 64 64" focusable="false">
+<g fill="currentColor">
+<rect x="12" y="10" width="12" height="44" rx="1.5"/>
+<rect x="24" y="10" width="12" height="12" rx="1"/>
+<rect x="24" y="26" width="22" height="12" rx="1"/>
+<rect x="24" y="42" width="14" height="12" rx="1"/>
+</g>
+<rect class="mark-accent" x="36" y="10" width="16" height="12" rx="1"/>
+</svg>
+<svg class="mark mark-vinculo" viewBox="0 0 64 64" focusable="false">
+<path class="mark-accent" d="M32 13C18 13 11 22 11 32c0 10 7 19 21 19" fill="none" stroke-width="8" stroke-linecap="round"/>
+<path d="M32 13c14 0 21 9 21 19 0 10-7 19-21 19" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+</svg>
+<svg class="mark mark-pulso" viewBox="0 0 64 64" focusable="false">
+<g transform="rotate(40 32 32)">
+<rect class="mark-accent" x="12" y="10" width="14" height="44" rx="5"/>
+<rect x="36" y="10" width="14" height="44" rx="5" fill="currentColor"/>
+</g>
+</svg>
 </div>
 <h1 class="brand-name">FANECT</h1>
 <p class="product-name">Tribuna Segura</p>
 <span class="badge badge-sim">PROTOTIPO DEMO · P0</span>
 </div>
 <p class="lede">Dos productos para la demo institucional. Elige la app a mostrar; no hay un flujo continuo entre hincha y operador.</p>
-<p class="footnote">Sin backend. Todo simulado en este dispositivo. No hay integraciones reales.</p>
+<p class="footnote">Sin backend. Todo simulado en este dispositivo. No hay integraciones reales. Rutas de marca provisional: el nombre no incluye tagline y ninguna ruta implica aval institucional ni tecnología implementada.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block hub-card-btn" data-go="hincha-home">
@@ -56,7 +93,25 @@
 <div class="screen-body centered home-body">
 <div class="brand-block brand-block-sm">
 <div class="logo-mark logo-mark-sm" aria-hidden="true">
-<img src="assets/fanect-mark.svg" alt="" width="48" height="48" />
+<svg class="mark mark-umbral" viewBox="0 0 64 64" focusable="false">
+<g fill="currentColor">
+<rect x="12" y="10" width="12" height="44" rx="1.5"/>
+<rect x="24" y="10" width="12" height="12" rx="1"/>
+<rect x="24" y="26" width="22" height="12" rx="1"/>
+<rect x="24" y="42" width="14" height="12" rx="1"/>
+</g>
+<rect class="mark-accent" x="36" y="10" width="16" height="12" rx="1"/>
+</svg>
+<svg class="mark mark-vinculo" viewBox="0 0 64 64" focusable="false">
+<path class="mark-accent" d="M32 13C18 13 11 22 11 32c0 10 7 19 21 19" fill="none" stroke-width="8" stroke-linecap="round"/>
+<path d="M32 13c14 0 21 9 21 19 0 10-7 19-21 19" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>
+</svg>
+<svg class="mark mark-pulso" viewBox="0 0 64 64" focusable="false">
+<g transform="rotate(40 32 32)">
+<rect class="mark-accent" x="12" y="10" width="14" height="44" rx="5"/>
+<rect x="36" y="10" width="14" height="44" rx="5" fill="currentColor"/>
+</g>
+</svg>
 </div>
 <h1 class="brand-name brand-name-sm">FANECT</h1>
 <p class="product-name">Tu acceso al evento</p>
@@ -164,6 +219,7 @@
 <button type="button" class="btn-icon" data-go="consentimientos" aria-label="Volver">←</button>
 <h2>Verificación de identidad</h2>
 </header>
+<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body">
 <p class="muted small">Elige cómo verificar. En P0 la ruta biométrica es mock; la asistida no biométrica es la rama real del piloto.</p>
 <div class="choice-cards">
@@ -175,7 +231,7 @@
 <button type="button" class="choice-card choice-card-accent" id="choiceAsistida">
 <span class="choice-title">Ruta asistida no biométrica</span>
 <span class="choice-desc">Validación manual asistida: documento + selfie de control (sin matching 1:N).</span>
-<span class="badge badge-ok">RAMA P0</span>
+<span class="badge badge-branch">RAMA P0</span>
 </button>
 </div>
 </div>
@@ -186,6 +242,7 @@
 <button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
 <h2>Ruta asistida</h2>
 </header>
+<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body">
 <div class="info-card">
 <p><strong>Pasos del operador de verificación</strong> (sin biometría 1:N):</p>
@@ -222,6 +279,7 @@
 <button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
 <h2>Proveedor (mock)</h2>
 </header>
+<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body centered">
 <div class="spinner" id="provSpinner" aria-hidden="true"></div>
 <p id="provText">Conectando con proveedor de identidad…</p>
@@ -233,6 +291,7 @@
 <header class="screen-header">
 <h2>Resultado</h2>
 </header>
+<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body centered">
 <div class="result-icon success" aria-hidden="true">✓</div>
 <h3 id="resultadoTitulo">Identidad verificada</h3>

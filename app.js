@@ -70,6 +70,14 @@
     },
   };
 
+  const THEMES = ["umbral", "vinculo", "pulso"];
+  const THEME_KEY = "fanect_theme";
+  const THEME_COLOR = {
+    umbral: "#121a24",
+    vinculo: "#0e1628",
+    pulso: "#120c16",
+  };
+
   const state = {
     app: "hub",
     screen: "hub",
@@ -449,8 +457,6 @@
     finder(0, 0);
     finder(cells - 7, 0);
     finder(0, cells - 7);
-    ctx.fillStyle = "#c8ff3d";
-    ctx.fillRect(9 * cell, 9 * cell, 3 * cell, 3 * cell);
   }
 
   function updateTtlDisplay() {
@@ -458,9 +464,11 @@
     if (!el || !state.qrExpiresAt) return;
     const left = Math.max(0, Math.ceil((state.qrExpiresAt - Date.now()) / 1000));
     el.textContent = left + " s";
-    if (left <= 0) {
+    const expired = left <= 0;
+    el.classList.toggle("is-expired", expired);
+    if (expired) {
       $("#paseEstado").textContent = "EXPIRADO";
-      $("#paseEstado").className = "badge badge-sim";
+      $("#paseEstado").className = "badge badge-expired";
     } else {
       $("#paseEstado").textContent = "VÁLIDO";
       $("#paseEstado").className = "badge badge-ok";
@@ -591,8 +599,29 @@
       String(d.getMinutes()).padStart(2, "0");
   }
 
+  function applyTheme(name, persist) {
+    const theme = THEMES.indexOf(name) >= 0 ? name : "umbral";
+    document.documentElement.setAttribute("data-theme", theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", THEME_COLOR[theme]);
+    $all("[data-theme-choice]").forEach((btn) => {
+      const on = btn.getAttribute("data-theme-choice") === theme;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    if (persist) {
+      try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
+    }
+  }
+
   function bind() {
     document.body.addEventListener("click", (e) => {
+      const themeEl = e.target.closest("[data-theme-choice]");
+      if (themeEl) {
+        e.preventDefault();
+        applyTheme(themeEl.getAttribute("data-theme-choice"), true);
+        return;
+      }
       const goEl = e.target.closest("[data-go]");
       if (goEl) {
         e.preventDefault();
@@ -626,6 +655,7 @@
 
   load();
   bind();
+  applyTheme(document.documentElement.getAttribute("data-theme"), false);
   tickClock();
   setInterval(tickClock, 30000);
   go("hub");
@@ -634,6 +664,7 @@
     go,
     state,
     rotateQr,
+    setTheme(name) { applyTheme(name, true); },
     reset() {
       localStorage.removeItem("fanect_p0");
       location.reload();
