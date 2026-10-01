@@ -118,8 +118,29 @@ fanect-prototipo-v0/
 
 ## Dirección de marca (provisional)
 
-Basada en moodboard **01 — Deportiva** (no final):
-- Mark F en 3 franjas verdes (oscuro → lima)
-- Fondo negro / charcoal
-- Tipografía display: Archivo Black; UI: Manrope
-- Acento primario: lima `#c8ff3d`
+Tres rutas del board **Fanect / tres rutas de identidad** (30 sep 2026). Ninguna es la marca oficial. El selector **UMBRAL | VÍNCULO | PULSO** está fijo en el marco (hub, Hincha y Operador) y persiste en `localStorage` (`fanect_theme`). Cambiar de ruta no navega ni borra el flujo; un reload normal restaura la última ruta y el estado ya guardado del demo.
+
+**Tema por defecto: `umbral`** (fondo oscuro de la ruta A). Es el más cercano al POC oscuro anterior. El lima deportivo (`#c8ff3d`) ya no pinta superficies ni estados.
+
+| Ruta | Fondo oscuro | Acento (board) | Símbolo |
+|------|----------------|----------------|---------|
+| UMBRAL | `#121a24` | coral `#f04e23` en la barra superior de la F | F geométrica de 3 barras |
+| VÍNCULO | `#0e1628` | royal `#2f5bff` (texto/símbolo en el mismo tono, más claro: `#8eaaff`) | ojo / hoja de dos trazos |
+| PULSO | `#120c16` | magenta `#c2185b` (texto/símbolo `#f472b6`) | dos barras diagonales |
+
+El lienzo de escritorio usa el fondo claro del board (`--canvas`). La app dentro del teléfono usa el fondo oscuro. Tipografía: Archivo Black (wordmark) y Manrope (UI). Sin tagline.
+
+### Estados que no siguen la marca
+
+Los tokens `--status-*` viven en `:root` y **no** se redefinen en `[data-theme]`.
+
+| Estado | Color fijo |
+|--------|------------|
+| Permitir / VÁLIDO / ACTIVO | verde |
+| Denegar | rojo |
+| Replay (revisión) | ámbar |
+| Usado / expirado | gris |
+| DEMO · SIMULADO | amarillo `#ffe14a` sobre negro `#14120a` |
+| RAMA P0 | gris pizarra, aparte del acento |
+
+La franja **DEMO · SIMULADO** está en verificación, ruta asistida, proveedor mock y resultado. No usa el coral de UMBRAL ni el magenta de PULSO, y no parece un verde de KYC aprobado. El QR es blanco y negro; el badge de validez usa el verde o el gris de estado.
