@@ -3,7 +3,9 @@
 Prototipo estático clicable (HTML/CSS/JS) para demo institucional. El MVP se presenta como **dos apps separadas** (Hincha y Operador) con un **hub** de entrada. No hay un flujo continuo que mezcle pantallas de hincha y operador.
 
 **Marca:** FANECT · **Producto (provisional):** Tribuna Segura  
-**Evento demo:** Evento demo — Club Alpha (ficticio; no es un club real)  
+**Evento demo (default):** `MFC-DEMO-2026` — Millonarios vs Atlético Nacional · Liga BetPlay (demo) · El Campín · Bogotá · Sábado 20:00  
+**Evento alterno:** `NAC-DEMO-2026` — Atlético Nacional vs Millonarios · Atanasio · Medellín · Jueves 19:30  
+**Hub:** una línea, `DEMO · sin licencia de marca · datos simulados`  
 **Sin backend.** Todo el estado vive en memoria / `localStorage`. No hay integraciones reales.
 
 **Live:** [https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
@@ -56,7 +58,7 @@ Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en mar
 | # | ID | Descripción |
 |---|-----|-------------|
 | — | `hincha-home` | Primera visita: CTA «Entrar al evento». Con Fan Pass en `localStorage`: tablero (pase, categoría, última asistencia) |
-| 1 | `entrada` | Código/link del evento (Club Alpha demo) |
+| 1 | `entrada` | Código del evento. Chips `Evento: Millonarios` / `Evento: Nacional` |
 | 2 | `registro` | Nombre, CC, celular, correo |
 | 3 | `consentimientos` | Identidad / Acceso / Comunicaciones |
 | 4 | `verificacion` | Proveedor mock **o** ruta asistida |
@@ -64,10 +66,10 @@ Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en mar
 | 4c | `proveedor` | Spinner simulado |
 | 5 | `resultado` | Identidad verificada |
 | 6 | `fanpass` | Fan Pass activo |
-| 7 | `boleta` | Vincular boleta nominativa |
+| 7 | `boleta` | Vincular boleta nominativa. Badge `Quentro · simulado`; el detalle de sincronización va debajo de la lista |
 | 8 | `pase` | QR dinámico + TTL, chip de categoría y acceso a beneficios (sin salto a operador) |
 | — | `perfil` | Iniciales, datos enmascarados, Fan Pass, FP-ID, chips de consentimiento |
-| — | `historial` | Partidos asistidos de demostración y contador de temporada |
+| — | `historial` | Partidos de demostración. Cada fila lleva badge SIMULADO y no muestra marcador oficial |
 | — | `categoria` | Hincha verificado · Piloto, progreso hacia Frecuente, beneficios abiertos y cerrados |
 | — | `beneficios` | QR, avisos, fila preferencial y servicios futuros (merch, contenido, apuestas) |
 | — | `privacidad` | Datos de acceso fuera de publicidad, comunicaciones y acceso rápido opcionales |
@@ -76,28 +78,54 @@ Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en mar
 
 | ID | Descripción |
 |----|-------------|
-| `operador-home` | Sesión mock (operador / puerta / turno) + «Abrir escáner» |
+| `operador-home` | Sesión mock. Puerta 3 · El Campín (demo) o Acceso Occidental · Atanasio (demo), según el evento |
 | `scanner` | Estados demo: válido / usado / expirado / replay |
 | `decision` | ALLOW o DENY con motivo |
-| `auditoria` | Correlación hincha ↔ boleta ↔ QR ↔ decisión |
+| `auditoria` | Correlación hincha ↔ boleta ↔ QR Fanect ↔ decisión. Incluye club, evento, `ticketId` y `origenBoleta: quentro_simulado` |
 
 ---
 
 ## Happy path sugerido
 
-1. En el **hub**, abrir **App Hincha** → Entrar al evento  
-2. Registro (precargado) → consentimientos Identidad + Acceso → Continuar  
-3. **Ruta asistida no biométrica** → «Aprobado por agente» → Enviar  
-4. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta → ver pase + QR (rotar TTL)  
-5. Con el Fan Pass guardado, **Inicio** muestra el tablero. Recorrido del slide: **Perfil** → historial / categoría / privacidad, **Pase**, **Beneficios**  
-6. **Cambiar de app** → hub → **App Operador** → Abrir escáner  
-7. Probar los 4 estados → decisión → mini auditoría  
+1. En el **hub**, la línea bajo la marca es `DEMO · sin licencia de marca · datos simulados`. Abrir **App Hincha** → Entrar al evento  
+2. El evento vigente es **Evento: Millonarios** (`MFC-DEMO-2026`, El Campín, sábado 20:00). El otro chip es **Evento: Nacional** (`NAC-DEMO-2026`, Atanasio, jueves 19:30)  
+3. Registro (precargado) → consentimientos Identidad + Acceso → Continuar  
+4. **Ruta asistida no biométrica** → «Aprobado por agente» → Enviar  
+5. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta. En boleta, el badge corto es `Quentro · simulado`; el texto largo queda debajo de la lista. IDs `T-MFC-*` o `T-NAC-*`  
+6. Ver pase + QR Fanect (rotar TTL). **Perfil** → historial (cada fila SIMULADO, sin marcador oficial) / categoría / privacidad, **Pase**, **Beneficios**  
+7. Si ya hay Fan Pass o boleta y se toca el otro chip: «Cambia el evento y reinicia el pase». Confirmar borra pase, boleta y auditoría para no mezclar `T-MFC` con Nacional  
+8. **Cambiar de app** → hub → **App Operador** → Abrir escáner  
+9. Probar los 4 estados → decisión → mini auditoría (`origenBoleta: quentro_simulado`)  
+
+Deep links (el alias no aparece en los chips):
+
+- `?event=NAC-DEMO-2026` o `?club=nacional`
+- `?event=MFC-DEMO-2026` o `?club=millonarios`
+- `?event=CLASICO-DEMO-2026` resuelve al evento vigente Millonarios. Con `club=nacional`, resuelve a Nacional
 
 Para volver al home de primera visita: `FanectDemo.reset()`.
 
 Consola: `FanectDemo.reset()` · `FanectDemo.go('perfil')` · `FanectDemo.state.app`
 
 ---
+
+## Millonarios, Nacional y Quentro (demo, sin licencia)
+
+Nombres comerciales públicos para la narrativa. No hay licencia de escudo, tipografía, kit ni logo de Millonarios FC ni de Atlético Nacional, y este POC no incrusta esos assets. Los colores `#0B3D91` (Millonarios) y `#0B7A3B` (Nacional) son placeholders y **solo** pintan los chips y labels del evento (`Evento: Millonarios`, `Evento: Nacional`). No cambian la marca FANECT (UMBRAL / VÍNCULO / PULSO), el selector de ruta, el TTL, ni los tokens `--status-*` de permitir, denegar, revisión, usado o `DEMO · SIMULADO`.
+
+Los chips dicen **Evento:** (o el local del partido). No dicen «Soy Millonarios» ni «Soy Nacional»: el demo no afirma afiliación del hincha.
+
+**Quentro** (Crowder) se muestra como fuente simulada de la boleta nominativa: hoy el hincha compra en la tiquetera del club (Entradas Millonarios o Tribuna Verde) y la entrada se acredita en Quentro. FANECT no reemplaza esa billetera y **no** hay API, webhook ni app Quentro conectada. El QR que abre la puerta del piloto es el **QR Fanect**. La auditoría guarda `origenBoleta: "quentro_simulado"`.
+
+Códigos en la UI, solo dos: `MFC-DEMO-2026` (default) y `NAC-DEMO-2026`. `CLASICO-DEMO-2026` no es un tercer evento ni un chip; únicamente un deep link que abre el evento vigente.
+
+Boletas mock: `T-MFC-NORTE-12-08`, `T-MFC-SUR-05-21`, `T-MFC-OCC-A-14` en El Campín; `T-NAC-OCC-B-10`, `T-NAC-ORI-A-22`, `T-NAC-NORTE-08-15` en el Atanasio. Titular precargado: Andrés Demo.
+
+Historial mock (fechas de demo, rivales de narrativa, **sin marcador real**). Cada fila lleva badge SIMULADO y la línea «Marcador ficticio · no es un resultado oficial».
+
+Si el usuario cambia de evento cuando ya existe Fan Pass o boleta, el demo no reescribe la boleta del otro club. Pide confirmación con el texto «Cambia el evento y reinicia el pase» y, al confirmar, borra pase, boleta, QR y auditoría.
+
+El detalle legal de marca vive en esta sección. En el hub solo aparece la línea corta bajo el bloque de marca.
 
 ## Fuera de P0 (no implementado)
 
@@ -107,6 +135,8 @@ Consola: `FanectDemo.reset()` · `FanectDemo.go('perfil')` · `FanectDemo.state.
 - Venta de datos
 - Consola completa de supervisor
 - Backend / APIs reales
+- API o app de Quentro (el bind de boleta es simulado)
+- Logos, escudos o brand kits oficiales de los clubes
 
 Etiquetas **SIMULADO** / **RAMA P0** / **HINCHA** / **OPERADOR** marcan mock vs. contexto de app.
 

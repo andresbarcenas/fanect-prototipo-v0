@@ -54,6 +54,7 @@
 <p class="product-name">Tribuna Segura</p>
 <span class="badge badge-sim">PROTOTIPO DEMO · P0</span>
 </div>
+<p class="hub-disclaimer">DEMO · sin licencia de marca · datos simulados</p>
 <p class="lede">Dos productos para la demo institucional. Elige la app a mostrar; no hay un flujo continuo entre hincha y operador.</p>
 <p class="footnote">Sin backend. Todo simulado en este dispositivo. No hay integraciones reales. Rutas de marca provisional: el nombre no incluye tagline y ninguna ruta implica aval institucional ni tecnología implementada.</p>
 </div>
@@ -86,7 +87,7 @@
 <p class="product-name">Tu acceso al evento</p>
 <span class="badge badge-sim">SIMULADO</span>
 </div>
-<p class="lede">Identidad digital + boleta nominativa para el Evento demo — Club Alpha.</p>
+<p class="lede" id="hinchaLede">Identidad digital + boleta nominativa para Millonarios vs Atlético Nacional (demo).</p>
 </div>
 <div id="hinchaDash" hidden>
 <div class="dash-hello">
@@ -95,7 +96,8 @@
 <span class="badge badge-sim">SIMULADO</span>
 </div>
 <h3 id="dashNombre">Hola, Andrés</h3>
-<p id="dashEvento">Evento demo — Club Alpha · Estadio Demo</p>
+<p class="club-label" id="dashClubLabel" data-club="millonarios">Evento: Millonarios</p>
+<p id="dashEvento">Millonarios vs Atlético Nacional · El Campín · Bogotá</p>
 </div>
 <div class="menu-list">
 <button type="button" class="menu-row" data-go="pase">
@@ -128,6 +130,7 @@
 </button>
 </div>
 </div>
+<p class="hint" id="hinchaPending" hidden>Hay un enlace a otro evento. En Entrada: cambia el evento y reinicia el pase.</p>
 </div>
 <div class="screen-actions" id="hinchaActionsLauncher">
 <button type="button" class="btn btn-primary btn-block" data-go="entrada">Entrar al evento</button>
@@ -147,15 +150,27 @@
 <div class="screen-body">
 <div class="event-card">
 <div class="event-badge">ACCESO POR CÓDIGO</div>
-<h3>Evento demo — Club Alpha</h3>
-<p class="muted">Estadio Demo · Bogotá · Sábado 20:00</p>
-<p class="muted small">Evento por invitación: entra con el código del organizador (no está bloqueado).</p>
+<p class="club-label" id="eventClubLabel" data-club="millonarios">Evento: Millonarios</p>
+<h3 id="eventTitle">Millonarios vs Atlético Nacional</h3>
+<p class="muted" id="eventComp">Liga BetPlay (demo)</p>
+<p class="muted" id="eventPlace">El Campín · Bogotá · Sábado 20:00</p>
+<p class="muted small">Evento por invitación (piloto FANECT) · código del organizador. SIMULADO · sin venta real · sin API Quentro.</p>
+</div>
+<div class="club-switch" role="radiogroup" aria-label="Evento de la demo">
+<button type="button" class="club-chip is-selected" role="radio" data-event="MFC-DEMO-2026" data-club="millonarios" aria-checked="true">Evento: Millonarios</button>
+<button type="button" class="club-chip" role="radio" data-event="NAC-DEMO-2026" data-club="nacional" aria-checked="false">Evento: Nacional</button>
+</div>
+<div id="eventResetWarn" class="event-reset" hidden>
+<p id="eventResetCopy">Cambia el evento y reinicia el pase.</p>
+<button type="button" class="btn btn-secondary btn-block" id="btnConfirmEvent">Cambiar evento y reiniciar pase</button>
+<button type="button" class="btn btn-ghost btn-block" id="btnCancelEvent">Mantener este evento</button>
 </div>
 <label class="field">
 <span class="field-label">Código / enlace del evento</span>
-<input type="text" id="eventCode" value="ALPHA-DEMO-2026" readonly class="input" />
+<input type="text" id="eventCode" value="MFC-DEMO-2026" readonly class="input" />
 </label>
-<p class="hint"><span class="badge badge-sim">SIMULADO</span> En producción el hincha llega por link o QR del organizador.</p>
+<p class="hint" id="aliasHint" hidden>Deep link resuelto al evento vigente.</p>
+<p class="hint"><span class="badge badge-sim">SIMULADO</span> En producción el hincha llega por link o QR del organizador. El acceso en puerta es el QR Fanect.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block" data-go="registro">Continuar al registro</button>
@@ -330,7 +345,9 @@
 <span class="badge badge-ok">ACTIVO</span>
 </div>
 <h3 id="passNombre">Andrés Demo</h3>
-<p class="muted">Evento demo — Club Alpha</p>
+<p class="club-label" id="passClubLabel" data-club="millonarios">Evento: Millonarios</p>
+<p class="muted" id="passEvento">Millonarios vs Atlético Nacional · Liga BetPlay (demo)</p>
+<p class="muted small" id="passPlace">El Campín · Bogotá · Sábado 20:00</p>
 <p class="tier-line"><span class="badge badge-ok" id="fanpassTier">Hincha verificado · Piloto</span></p>
 <div class="pass-id">FP-<span id="passId">A1B2C3</span></div>
 </div>
@@ -348,8 +365,9 @@
 <h2>Vincular boleta</h2>
 </header>
 <div class="screen-body">
-<p class="muted small"><span class="badge badge-sim">SIMULADOR</span> Elige una boleta nominativa de demo.</p>
+<p class="muted small"><span class="badge badge-sim">Quentro · simulado</span> Elige una boleta nominativa de demo.</p>
 <div class="ticket-list" id="ticketList" role="listbox" aria-label="Boletas disponibles"></div>
+<p class="hint" id="boletaHint">Sincronización simulada con Quentro (post-PoC). La tiquetera de este evento es Entradas Millonarios. FANECT no llama a una API Quentro: en la puerta el operador lee el QR Fanect.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block" id="btnVincular" disabled>Vincular boleta seleccionada</button>
@@ -364,7 +382,11 @@
 <div class="screen-body">
 <div class="qr-card">
 <div class="qr-meta">
-<span id="paseSector">Tribuna Norte · Fila 12 · Asiento 08</span>
+<div class="qr-meta-copy">
+<p class="club-label" id="paseClubLabel" data-club="millonarios">Evento: Millonarios</p>
+<span id="paseSector">Lateral Norte · Fila 12 · Asiento 08</span>
+<p class="muted small" id="paseEvento">Millonarios vs Atlético Nacional · El Campín · Bogotá · Sábado 20:00</p>
+</div>
 <span class="badge badge-ok" id="paseEstado">VÁLIDO</span>
 </div>
 <div class="pase-quick">
@@ -382,7 +404,7 @@
 </div>
 <p class="mono small" id="qrPayload">qr:…</p>
 </div>
-<p class="footnote">Muestra este QR en la puerta. La validación se hace en la App Operador (producto aparte).</p>
+<p class="footnote">Muestra este QR Fanect en la puerta. Quentro no se consulta en el torniquete. La validación se hace en la App Operador.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-secondary btn-block" id="btnRotar">Rotar QR (simulado)</button>
@@ -400,7 +422,9 @@
 <p class="kicker">Perfil y decisiones</p>
 <div class="avatar" id="perfilIniciales" aria-hidden="true">AD</div>
 <h3 id="perfilNombre">Andrés Demo</h3>
-<p class="muted small" id="perfilEvento">Evento demo — Club Alpha · Estadio Demo · Bogotá</p>
+<p class="club-label" id="perfilClubLabel" data-club="millonarios">Evento: Millonarios</p>
+<p class="muted small" id="perfilEvento">Millonarios vs Atlético Nacional · El Campín · Bogotá · Sábado 20:00</p>
+<p class="muted small" id="perfilFavorito">Club del evento demo: Millonarios FC</p>
 <div id="perfilPassBadge"><span class="badge badge-ok">FAN PASS ACTIVO</span></div>
 <p class="pass-id" id="perfilFp">FP-A1B2C3</p>
 </div>
@@ -449,12 +473,13 @@
 <div>
 <p class="kicker">Esta temporada</p>
 <h3><span id="historialCount">3</span> partidos</h3>
-<p class="muted small">Club Alpha · piloto demo</p>
+<p class="club-label" id="historialClubLabel" data-club="millonarios">Evento: Millonarios</p>
+<p class="muted small" id="historialClub">Millonarios FC · piloto demo</p>
 </div>
 <span class="badge badge-sim">SIMULADO</span>
 </div>
 <div class="history-list" id="historialList"></div>
-<p class="footnote">Asistencias de demostración del piloto. Club Alpha es ficticio; no hay un lector real detrás de estos partidos.</p>
+<p class="footnote">Asistencias de demostración. Cada fila es SIMULADO y no trae marcador oficial. Quentro no está conectado.</p>
 </div>
 <div id="historialEmpty" class="empty-card" hidden>
 <h3>Aún no hay partidos</h3>
@@ -567,15 +592,16 @@
 <div class="screen-body">
 <div class="info-card session-card">
 <div class="event-badge">SESIÓN DE PUERTA · SIMULADO</div>
+<p class="club-label" id="opClubLabel" data-club="millonarios">Evento: Millonarios</p>
 <h3>Operador Demo</h3>
 <dl class="session-meta">
-<div><dt>Puerta / gate</dt><dd>Norte A · Acceso 3</dd></div>
-<div><dt>Evento</dt><dd>Evento demo — Club Alpha</dd></div>
-<div><dt>Turno</dt><dd>20:00 – 22:30</dd></div>
+<div><dt>Puerta / gate</dt><dd id="opGate">Puerta 3 · El Campín (demo)</dd></div>
+<div><dt>Evento</dt><dd id="opEvento">Millonarios vs Atlético Nacional · MFC-DEMO-2026</dd></div>
+<div><dt>Turno</dt><dd id="opTurno">20:00 – 22:30</dd></div>
 </dl>
 <span class="badge badge-sim">SIMULADO</span>
 </div>
-<p class="muted small">Escanea el QR del hincha y registra la decisión de ingreso. Esta app es independiente del flujo hincha.</p>
+<p class="muted small">Escanea el QR Fanect del hincha y registra la decisión de ingreso. Quentro no se llama en la puerta. Esta app es independiente del flujo hincha.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block" data-go="scanner">Abrir escáner</button>
