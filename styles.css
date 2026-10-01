@@ -609,13 +609,14 @@ html[data-theme="pulso"] .mark-pulso .mark-accent { fill: var(--brand-ink); }
 .qr-box {
   background: #fff;
   border-radius: 12px;
-  padding: 12px;
-  width: 224px;
-  height: 224px;
+  padding: 8px;
+  width: 184px;
+  height: 184px;
   margin: 0 auto 12px;
   display: grid;
   place-items: center;
 }
+.qr-box canvas { width: 168px; height: 168px; }
 .ttl-row {
   display: flex;
   justify-content: space-between;
@@ -1047,7 +1048,28 @@ html[data-theme="pulso"] .mark-pulso .mark-accent { fill: var(--brand-ink); }
 .menu-copy strong { font-size: .92rem; line-height: 1.25; }
 .menu-copy span { color: var(--muted); font-size: .76rem; }
 .menu-chev { color: var(--brand-ink); font-weight: 800; flex-shrink: 0; }
-.pase-links { display: flex; flex-direction: column; gap: 8px; }
+.pase-quick {
+  display: grid;
+  grid-template-columns: 1.5fr 0.9fr;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+.pase-quick-btn {
+  appearance: none;
+  border: 1px solid color-mix(in srgb, var(--brand) 48%, var(--border));
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+  color: var(--text);
+  font: inherit;
+  font-size: .74rem;
+  font-weight: 750;
+  line-height: 1.2;
+  border-radius: 999px;
+  padding: 8px 10px;
+  cursor: pointer;
+  text-align: center;
+}
+.pase-quick-btn:hover { border-color: var(--brand-ink); }
+.pase-quick-btn:active { transform: scale(.98); }
 
 .profile-hero {
   display: flex;
