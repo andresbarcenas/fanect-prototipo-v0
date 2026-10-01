@@ -1305,3 +1305,109 @@ button.benefit-card:active { transform: scale(.99); }
 
 .tab-item[data-nav="beneficios"].is-active,
 .tab-item[data-nav="perfil"].is-active { color: var(--brand-ink); }
+
+/* Placeholder club colors (#0B3D91 Millonarios, #0B7A3B Nacional).
+   Only .club-chip and .club-label may use them.
+   Do not paint --brand, UMBRAL|VÍNCULO|PULSO, the theme switcher,
+   --status-*, allow/deny, TTL, or DEMO · SIMULADO banners. */
+.hub-disclaimer {
+  position: relative;
+  z-index: 1;
+  margin: 8px 0 0;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .01em;
+  color: var(--muted);
+}
+.club-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.club-chip {
+  --club: var(--text);
+  --club-ink: var(--bg);
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font: inherit;
+  font-size: .74rem;
+  font-weight: 800;
+  line-height: 1.2;
+  border-radius: 999px;
+  padding: 10px 8px;
+  cursor: pointer;
+}
+.club-chip[data-club="millonarios"] { --club: #0B3D91; --club-ink: #ffffff; }
+.club-chip[data-club="nacional"] { --club: #0B7A3B; --club-ink: #ffffff; }
+.club-chip::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--club);
+  flex-shrink: 0;
+}
+.club-chip.is-selected {
+  background: var(--club);
+  color: var(--club-ink);
+  border-color: var(--club);
+}
+.club-chip.is-selected::before { background: var(--club-ink); }
+.club-chip.is-pending {
+  border-style: dashed;
+  border-color: var(--club);
+  color: var(--club);
+}
+.club-chip:focus-visible {
+  outline: 2px solid var(--club);
+  outline-offset: 2px;
+}
+.club-label {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  width: fit-content;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .01em;
+  line-height: 1.2;
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin: 0 0 6px;
+  border: 1px solid transparent;
+}
+.club-label[data-club="millonarios"] {
+  background: #0B3D91;
+  color: #ffffff;
+}
+.club-label[data-club="nacional"] {
+  background: #0B7A3B;
+  color: #ffffff;
+}
+.profile-hero .club-label { align-self: center; }
+.event-reset {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.event-reset p { font-size: .85rem; }
+.qr-meta { align-items: flex-start; }
+.qr-meta-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+  text-align: left;
+}
+.qr-meta-copy .club-label { margin-bottom: 0; }

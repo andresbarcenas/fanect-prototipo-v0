@@ -49,40 +49,63 @@
   const CATEGORY_NAME = "Hincha verificado · Piloto";
   const CATEGORY_NEXT = "Frecuente";
   const CATEGORY_GOAL = 5;
-  const HISTORY = [
-    {
-      rival: "Club Alpha vs Rival Norte",
-      stadium: "Estadio Demo",
+  const DEFAULT_EVENT = "MFC-DEMO-2026";
+
+  /* CLASICO-DEMO-2026 is not a third event. It only resolves from a deep link. */
+  const EVENT_ALIAS = "CLASICO-DEMO-2026";
+
+  const EVENTS = {
+    "MFC-DEMO-2026": {
+      code: "MFC-DEMO-2026",
+      club: "millonarios",
+      chip: "Evento: Millonarios",
+      clubName: "Millonarios FC",
+      title: "Millonarios vs Atlético Nacional",
+      subtitle: "Liga BetPlay (demo)",
+      venue: "El Campín",
       city: "Bogotá",
-      date: "12 sep 2026",
-      sector: "Tribuna Norte",
-      season: true,
+      when: "Sábado 20:00",
+      placeLine: "El Campín · Bogotá · Sábado 20:00",
+      gate: "Puerta 3 · El Campín (demo)",
+      shift: "20:00 – 22:30",
+      desk: "Entradas Millonarios",
+      tickets: [
+        { id: "T-MFC-NORTE-12-08", sector: "Lateral Norte", fila: "12", asiento: "08", titular: "Andrés Demo" },
+        { id: "T-MFC-SUR-05-21", sector: "Lateral Sur", fila: "05", asiento: "21", titular: "Andrés Demo" },
+        { id: "T-MFC-OCC-A-14", sector: "Occidental", fila: "A", asiento: "14", titular: "Andrés Demo" },
+      ],
+      history: [
+        { rival: "Millonarios vs Atlético Nacional", stadium: "El Campín", city: "Bogotá", date: "12 sep 2026", sector: "Occidental", season: true, attend: "Asistí · QR validado" },
+        { rival: "Millonarios vs Independiente Santa Fe", stadium: "El Campín", city: "Bogotá", date: "20 ago 2026", sector: "Lateral Norte", season: true, attend: "Asistí" },
+        { rival: "Millonarios vs Junior", stadium: "El Campín", city: "Bogotá", date: "02 ago 2026", sector: "Lateral Sur", season: true, attend: "Asistí" },
+      ],
     },
-    {
-      rival: "Club Alpha vs Rival Sur",
-      stadium: "Estadio Demo",
-      city: "Bogotá",
-      date: "20 ago 2026",
-      sector: "Occidental",
-      season: true,
+    "NAC-DEMO-2026": {
+      code: "NAC-DEMO-2026",
+      club: "nacional",
+      chip: "Evento: Nacional",
+      clubName: "Atlético Nacional",
+      title: "Atlético Nacional vs Millonarios",
+      subtitle: "Liga BetPlay (demo)",
+      venue: "Atanasio",
+      city: "Medellín",
+      when: "Jueves 19:30",
+      placeLine: "Atanasio · Medellín · Jueves 19:30",
+      gate: "Acceso Occidental · Atanasio (demo)",
+      shift: "19:30 – 22:00",
+      desk: "Tribuna Verde",
+      tickets: [
+        { id: "T-NAC-OCC-B-10", sector: "Occidental Baja", fila: "10", asiento: "10", titular: "Andrés Demo" },
+        { id: "T-NAC-ORI-A-22", sector: "Oriental Alta", fila: "A", asiento: "22", titular: "Andrés Demo" },
+        { id: "T-NAC-NORTE-08-15", sector: "Norte", fila: "08", asiento: "15", titular: "Andrés Demo" },
+      ],
+      history: [
+        { rival: "Atlético Nacional vs Millonarios", stadium: "Atanasio", city: "Medellín", date: "12 sep 2026", sector: "Occidental Baja", season: true, attend: "Asistí · QR validado" },
+        { rival: "Atlético Nacional vs Deportivo Cali", stadium: "Atanasio", city: "Medellín", date: "20 ago 2026", sector: "Oriental", season: true, attend: "Asistí" },
+        { rival: "Atlético Nacional vs América de Cali", stadium: "Atanasio", city: "Medellín", date: "02 ago 2026", sector: "Norte", season: true, attend: "Asistí" },
+      ],
     },
-    {
-      rival: "Amistoso Demo",
-      stadium: "Estadio Demo",
-      city: "Bogotá",
-      date: "2 ago 2026",
-      sector: "General",
-      season: true,
-    },
-    {
-      rival: "Club Alpha vs Rival Costa",
-      stadium: "Estadio Demo",
-      city: "Bogotá",
-      date: "15 nov 2025",
-      sector: "Tribuna Sur",
-      season: false,
-    },
-  ];
+  };
   const TIER_UNLOCKED = [
     { title: "Fan Pass del evento", desc: "Identidad confirmada para este piloto" },
     { title: "QR de ingreso", desc: "Boleta nominativa y pase dinámico" },
@@ -93,11 +116,55 @@
     { title: "Experiencias de temporada", desc: "Servicio futuro del piloto" },
   ];
 
-  const TICKETS = [
-    { id: "T-NORTE-12-08", sector: "Tribuna Norte", fila: "12", asiento: "08", titular: "Andrés Demo" },
-    { id: "T-SUR-05-21", sector: "Tribuna Sur", fila: "05", asiento: "21", titular: "Andrés Demo" },
-    { id: "T-ORIENTE-A-14", sector: "Preferencial Oriente", fila: "A", asiento: "14", titular: "Andrés Demo" },
-  ];
+  function currentEvent() {
+    return EVENTS[state.eventCode] || EVENTS[DEFAULT_EVENT];
+  }
+
+  function eventTickets() {
+    return currentEvent().tickets;
+  }
+
+  function eventHistory() {
+    return currentEvent().history;
+  }
+
+  function ticketBelongs(ticket, code) {
+    const ev = EVENTS[code];
+    if (!ticket || !ticket.id || !ev) return false;
+    return ev.tickets.some((t) => t.id === ticket.id);
+  }
+
+  function boundTicket() {
+    return ticketBelongs(state.ticket, state.eventCode) ? state.ticket : null;
+  }
+
+  function clubToEvent(club) {
+    const key = String(club || "").trim().toLowerCase();
+    if (key === "nacional" || key === "atletico-nacional" || key === "atleticonacional" || key === "nac") {
+      return "NAC-DEMO-2026";
+    }
+    if (key === "millonarios" || key === "millonarios-fc" || key === "mfc") {
+      return "MFC-DEMO-2026";
+    }
+    return null;
+  }
+
+  function readLaunchEvent() {
+    let params;
+    try {
+      params = new URLSearchParams(window.location.search);
+    } catch (_) {
+      return null;
+    }
+    const raw = (params.get("event") || "").trim().toUpperCase();
+    const fromClub = clubToEvent(params.get("club"));
+    if (raw === EVENT_ALIAS) {
+      return { code: fromClub || DEFAULT_EVENT, alias: EVENT_ALIAS };
+    }
+    if (EVENTS[raw]) return { code: raw, alias: null };
+    if (fromClub) return { code: fromClub, alias: null };
+    return null;
+  }
 
   const DECISION_COPY = {
     valido: {
@@ -140,6 +207,9 @@
     consents: { identidad: false, acceso: false, comms: false },
     prefs: { noAds: true, accesoRapido: false },
     consentsKnown: false,
+    eventCode: DEFAULT_EVENT,
+    pendingEventCode: null,
+    aliasFrom: null,
     verifyPath: null,
     passId: null,
     ticket: null,
@@ -186,6 +256,7 @@
         consents: state.consents,
         prefs: state.prefs,
         consentsKnown: state.consentsKnown,
+        eventCode: state.eventCode,
         auditLog: state.auditLog.slice(-20),
       }));
     } catch (_) {}
@@ -193,7 +264,9 @@
   function load() {
     try {
       const raw = localStorage.getItem("fanect_p0");
-      if (!raw) return;
+      if (!raw) {
+        /* Deep link still applies on a fresh device. */
+      } else {
       const d = JSON.parse(raw);
       if (d.nombre) state.nombre = d.nombre;
       if (d.doc) state.doc = d.doc;
@@ -213,8 +286,75 @@
       if (d.prefs && typeof d.prefs === "object") {
         state.prefs = Object.assign(state.prefs, d.prefs);
       }
+      if (d.eventCode && EVENTS[d.eventCode]) state.eventCode = d.eventCode;
       if (Array.isArray(d.auditLog)) state.auditLog = d.auditLog;
+      if (!ticketBelongs(state.ticket, state.eventCode)) {
+        state.ticket = null;
+        state.qrNonce = null;
+        state.qrExpiresAt = null;
+      }
+      }
     } catch (_) {}
+    const launch = readLaunchEvent();
+    if (launch) {
+      state.aliasFrom = launch.alias;
+      if (launch.code !== state.eventCode) {
+        if (state.passId || state.ticket) state.pendingEventCode = launch.code;
+        else state.eventCode = launch.code;
+      }
+    }
+  }
+
+  function hasCredential() {
+    return !!(state.passId || state.ticket);
+  }
+
+  function clearCredential() {
+    state.passId = null;
+    state.ticket = null;
+    state.qrNonce = null;
+    state.qrExpiresAt = null;
+    state.qrRotation = 0;
+    state.lastDecision = null;
+    state.auditLog = [];
+    state.selectedQrState = null;
+  }
+
+  function paintClubLabel(el) {
+    if (!el) return;
+    const ev = currentEvent();
+    el.textContent = ev.chip;
+    el.setAttribute("data-club", ev.club);
+  }
+
+  function applyEvent(code) {
+    if (!EVENTS[code]) return;
+    state.eventCode = code;
+    state.pendingEventCode = null;
+    save();
+    renderEntrada();
+  }
+
+  function requestEvent(code) {
+    if (!EVENTS[code]) return;
+    if (code === state.eventCode) {
+      state.pendingEventCode = null;
+      renderEntrada();
+      return;
+    }
+    if (hasCredential()) {
+      state.pendingEventCode = code;
+      renderEntrada();
+      return;
+    }
+    applyEvent(code);
+  }
+
+  function confirmEventReset() {
+    const code = state.pendingEventCode;
+    if (!EVENTS[code]) return;
+    clearCredential();
+    applyEvent(code);
   }
 
   function appFor(screen) {
@@ -291,6 +431,8 @@
 
   function onEnter(name) {
     if (name === "hincha-home") renderHinchaHome();
+    if (name === "entrada") renderEntrada();
+    if (name === "operador-home") renderOperador();
     if (name === "registro") {
       $("#regNombre").value = state.nombre;
       $("#regDoc").value = state.doc;
@@ -428,7 +570,12 @@
       "<dt>Método</dt><dd>" +
       escapeHtml(pathLabel) +
       "</dd>" +
-      "<dt>Evento</dt><dd>Evento demo — Club Alpha</dd>" +
+      "<dt>Evento</dt><dd>" +
+      escapeHtml(currentEvent().title) +
+      "</dd>" +
+      "<dt>Código</dt><dd>" +
+      escapeHtml(currentEvent().code) +
+      "</dd>" +
       "<dt>Categoría</dt><dd>" +
       escapeHtml(CATEGORY_NAME) +
       "</dd>" +
@@ -452,19 +599,92 @@
     }
     $("#passNombre").textContent = state.nombre;
     $("#passId").textContent = state.passId;
+    const ev = currentEvent();
+    paintClubLabel($("#passClubLabel"));
+    const passEvento = $("#passEvento");
+    if (passEvento) passEvento.textContent = ev.title + " · " + ev.subtitle;
+    const passPlace = $("#passPlace");
+    if (passPlace) passPlace.textContent = ev.placeLine;
     const tier = $("#fanpassTier");
     if (tier) tier.textContent = CATEGORY_NAME;
   }
 
+  function renderEntrada() {
+    const ev = currentEvent();
+    paintClubLabel($("#eventClubLabel"));
+    const title = $("#eventTitle");
+    if (title) title.textContent = ev.title;
+    const comp = $("#eventComp");
+    if (comp) comp.textContent = ev.subtitle;
+    const place = $("#eventPlace");
+    if (place) place.textContent = ev.placeLine;
+    const code = $("#eventCode");
+    if (code && document.activeElement !== code) code.value = ev.code;
+    const alias = $("#aliasHint");
+    if (alias) {
+      alias.hidden = !state.aliasFrom;
+      if (state.aliasFrom) {
+        alias.textContent = "Deep link " + state.aliasFrom + " abre " + ev.code + ". No es un tercer código en la lista.";
+      }
+    }
+    $all("[data-event]").forEach((btn) => {
+      const id = btn.getAttribute("data-event");
+      const on = id === state.eventCode;
+      const pending = id === state.pendingEventCode;
+      btn.classList.toggle("is-selected", on);
+      btn.classList.toggle("is-pending", pending && !on);
+      btn.setAttribute("aria-checked", on ? "true" : "false");
+    });
+    const warn = $("#eventResetWarn");
+    const next = EVENTS[state.pendingEventCode];
+    if (warn) {
+      warn.hidden = !next;
+      if (next) warn.scrollIntoView({ block: "nearest" });
+    }
+    const copy = $("#eventResetCopy");
+    if (copy && next) {
+      const prefix = ev.code.indexOf("MFC") === 0 ? "T-MFC" : "T-NAC";
+      copy.textContent =
+        "Cambia el evento y reinicia el pase. Una boleta " +
+        prefix +
+        " no se mezcla con " +
+        next.title +
+        ".";
+    }
+  }
+
+  function renderOperador() {
+    const ev = currentEvent();
+    paintClubLabel($("#opClubLabel"));
+    const gate = $("#opGate");
+    if (gate) gate.textContent = ev.gate;
+    const evento = $("#opEvento");
+    if (evento) evento.textContent = ev.title + " · " + ev.code;
+    const turno = $("#opTurno");
+    if (turno) turno.textContent = ev.shift;
+  }
+
+  function boletaSyncCopy(ev) {
+    return (
+      "Sincronización simulada con Quentro (post-PoC). La tiquetera de este evento es " +
+      ev.desk +
+      ". FANECT no llama a una API Quentro: en la puerta el operador lee el QR Fanect."
+    );
+  }
+
   function renderTickets() {
     const list = $("#ticketList");
+    const ev = currentEvent();
+    const hint = $("#boletaHint");
+    if (hint) hint.textContent = boletaSyncCopy(ev);
     list.innerHTML = "";
-    TICKETS.forEach((t) => {
+    const selected = boundTicket();
+    eventTickets().forEach((t) => {
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "ticket-item" + (state.ticket && state.ticket.id === t.id ? " selected" : "");
+      btn.className = "ticket-item" + (selected && selected.id === t.id ? " selected" : "");
       btn.setAttribute("role", "option");
-      btn.setAttribute("aria-selected", state.ticket && state.ticket.id === t.id ? "true" : "false");
+      btn.setAttribute("aria-selected", selected && selected.id === t.id ? "true" : "false");
       btn.innerHTML =
         "<strong>" +
         escapeHtml(t.sector) +
@@ -476,28 +696,49 @@
         "<span>ID " +
         escapeHtml(t.id) +
         " · Titular: " +
-        escapeHtml(t.titular) +
+        escapeHtml(state.nombre || t.titular) +
         "</span>";
       btn.addEventListener("click", () => {
-        state.ticket = t;
+        state.ticket = {
+          id: t.id,
+          sector: t.sector,
+          fila: t.fila,
+          asiento: t.asiento,
+          titular: state.nombre || t.titular,
+          eventCode: ev.code,
+          origenBoleta: "quentro_simulado",
+        };
         renderTickets();
         $("#btnVincular").disabled = false;
       });
       list.appendChild(btn);
     });
-    $("#btnVincular").disabled = !state.ticket;
+    $("#btnVincular").disabled = !boundTicket();
   }
 
   function vincularBoleta() {
-    if (!state.ticket) return;
+    if (!boundTicket()) return;
     save();
     rotateQr(true);
     go("pase");
   }
 
+  function ticketSnapshot(t) {
+    const src = t || eventTickets()[0];
+    return {
+      id: src.id,
+      sector: src.sector,
+      fila: src.fila,
+      asiento: src.asiento,
+      titular: state.nombre || src.titular,
+      eventCode: state.eventCode,
+      origenBoleta: "quentro_simulado",
+    };
+  }
+
   function ensureQr() {
     if (!state.passId) state.passId = uid(6);
-    if (!state.ticket) state.ticket = TICKETS[0];
+    if (!boundTicket()) state.ticket = ticketSnapshot(eventTickets()[0]);
     if (!state.qrNonce || !state.qrExpiresAt) rotateQr(true);
   }
 
@@ -510,11 +751,14 @@
   }
 
   function qrPayload() {
-    const t = state.ticket || {};
+    const ev = currentEvent();
+    const t = boundTicket() || {};
     return [
       "FANECT",
       "v0",
-      "event=ALPHA-DEMO-2026",
+      "event=" + ev.code,
+      "club=" + ev.club,
+      "origen=quentro_simulado",
       "pass=" + (state.passId || ""),
       "ticket=" + (t.id || ""),
       "nonce=" + (state.qrNonce || ""),
@@ -524,7 +768,11 @@
   }
 
   function renderPase() {
-    const t = state.ticket || TICKETS[0];
+    const ev = currentEvent();
+    const t = boundTicket() || eventTickets()[0];
+    paintClubLabel($("#paseClubLabel"));
+    const paseEvento = $("#paseEvento");
+    if (paseEvento) paseEvento.textContent = ev.title + " · " + ev.placeLine;
     $("#paseSector").textContent =
       t.sector + " · Fila " + t.fila + " · Asiento " + t.asiento;
     $("#paseEstado").textContent = "VÁLIDO";
@@ -613,6 +861,8 @@
     const st = state.selectedQrState;
     if (!st || !DECISION_COPY[st]) return;
     const copy = DECISION_COPY[st];
+    const ev = currentEvent();
+    const t = ticketSnapshot(boundTicket() || eventTickets()[0]);
     const decision = {
       state: st,
       allow: copy.allow,
@@ -620,10 +870,18 @@
       reason: copy.reason,
       at: nowLabel(),
       passId: state.passId || "—",
-      ticketId: (state.ticket && state.ticket.id) || TICKETS[0].id,
+      ticketId: t.id,
+      sector: t.sector,
+      fila: t.fila,
+      asiento: t.asiento,
       nombre: state.nombre,
       qrNonce: state.qrNonce || uid(8),
       correlationId: "AUD-" + uid(8),
+      eventCode: ev.code,
+      eventTitle: ev.title,
+      club: ev.clubName,
+      gate: ev.gate,
+      origenBoleta: "quentro_simulado",
     };
     state.lastDecision = decision;
     state.auditLog.push(decision);
@@ -660,6 +918,18 @@
       "<dt>Correlación</dt><dd class='mono'>" +
       escapeHtml(d.correlationId) +
       "</dd>" +
+      "<dt>Club</dt><dd>" +
+      escapeHtml(d.club || "—") +
+      "</dd>" +
+      "<dt>Evento</dt><dd>" +
+      escapeHtml(d.eventTitle ? (d.eventCode || "") + " · " + d.eventTitle : (d.eventCode || "—")) +
+      "</dd>" +
+      "<dt>Boleta</dt><dd>" +
+      escapeHtml(d.ticketId || "—") +
+      "</dd>" +
+      "<dt>Origen boleta</dt><dd>" +
+      escapeHtml(d.origenBoleta || "quentro_simulado") +
+      "</dd>" +
       "</dl>";
   }
 
@@ -670,7 +940,7 @@
       card.innerHTML = "<p class='muted'>No hay evento de validación aún.</p>";
       return;
     }
-    const t = state.ticket || TICKETS[0];
+    const sector = (d.sector || "—") + " · " + (d.fila || "—") + "-" + (d.asiento || "—");
     card.innerHTML =
       "<dl>" +
       "<dt>ID correlación</dt><dd>" +
@@ -686,7 +956,7 @@
       escapeHtml(d.ticketId) +
       "</dd>" +
       "<dt>Sector</dt><dd>" +
-      escapeHtml(t.sector + " · " + t.fila + "-" + t.asiento) +
+      escapeHtml(sector) +
       "</dd>" +
       "<dt>Nonce QR</dt><dd class='mono'>" +
       escapeHtml(d.qrNonce) +
@@ -700,8 +970,19 @@
       "<dt>Timestamp</dt><dd>" +
       escapeHtml(d.at) +
       "</dd>" +
-      "<dt>Evento</dt><dd>Evento demo — Club Alpha</dd>" +
-      "<dt>Canal</dt><dd>Escáner puerta · SIMULADO</dd>" +
+      "<dt>Club</dt><dd>" +
+      escapeHtml(d.club || "—") +
+      "</dd>" +
+      "<dt>Evento</dt><dd>" +
+      escapeHtml((d.eventCode || "") + (d.eventTitle ? " · " + d.eventTitle : "")) +
+      "</dd>" +
+      "<dt>Origen boleta</dt><dd>" +
+      escapeHtml(d.origenBoleta || "quentro_simulado") +
+      "</dd>" +
+      "<dt>Puerta</dt><dd>" +
+      escapeHtml(d.gate || "—") +
+      "</dd>" +
+      "<dt>Canal</dt><dd>Escáner puerta · QR Fanect · SIMULADO</dd>" +
       "</dl>";
   }
 
@@ -710,7 +991,7 @@
   }
 
   function seasonMatches() {
-    return HISTORY.filter((m) => m.season);
+    return eventHistory().filter((m) => m.season);
   }
 
   function firstName(nombre) {
@@ -764,10 +1045,16 @@
       body.classList.toggle("centered", !ready);
       body.classList.toggle("home-body", !ready);
     }
+    const ev = currentEvent();
+    const lede = $("#hinchaLede");
+    if (lede) lede.textContent = "Identidad digital + boleta nominativa para " + ev.title + " (demo).";
+    const pending = $("#hinchaPending");
+    if (pending) pending.hidden = !state.pendingEventCode;
     if (!ready) return;
     $("#dashNombre").textContent = "Hola, " + firstName(state.nombre);
-    $("#dashEvento").textContent = "Evento demo — Club Alpha · Estadio Demo";
-    const t = state.ticket;
+    paintClubLabel($("#dashClubLabel"));
+    $("#dashEvento").textContent = ev.title + " · " + ev.venue + " · " + ev.city;
+    const t = boundTicket();
     $("#dashPaseSub").textContent = t
       ? "FP-" + state.passId + " · " + t.sector + " · Fila " + t.fila
       : "FP-" + state.passId + " · QR de ingreso";
@@ -783,9 +1070,13 @@
 
   function renderPerfil() {
     const ready = hasPass();
+    const ev = currentEvent();
     $("#perfilIniciales").textContent = initials(state.nombre);
     $("#perfilNombre").textContent = state.nombre;
-    $("#perfilEvento").textContent = "Evento demo — Club Alpha · Estadio Demo · Bogotá";
+    paintClubLabel($("#perfilClubLabel"));
+    $("#perfilEvento").textContent = ev.title + " · " + ev.placeLine;
+    const favorito = $("#perfilFavorito");
+    if (favorito) favorito.textContent = "Club del evento demo: " + ev.clubName;
     $("#perfilDoc").textContent = maskDoc(state.doc);
     $("#perfilCel").textContent = maskPhone(state.cel);
     $("#perfilEmail").textContent = maskEmail(state.email);
@@ -815,28 +1106,31 @@
     $("#historialEmpty").hidden = ready;
     $("#historialActionsEmpty").hidden = ready;
     if (!ready) return;
+    const ev = currentEvent();
     const season = seasonMatches();
     $("#historialCount").textContent = String(season.length);
+    paintClubLabel($("#historialClubLabel"));
+    const clubLine = $("#historialClub");
+    if (clubLine) clubLine.textContent = ev.clubName + " · piloto demo";
     const list = $("#historialList");
     list.innerHTML = "";
-    HISTORY.forEach((m) => {
+    eventHistory().forEach((m) => {
       const article = document.createElement("article");
       article.className = "history-item";
       article.innerHTML =
         '<div class="history-top"><h3>' +
         escapeHtml(m.rival) +
-        "</h3>" +
-        (m.season
-          ? ""
-          : '<span class="badge badge-lock">Temporada anterior</span>') +
-        "</div>" +
+        '</h3><span class="badge badge-sim">SIMULADO</span></div>' +
         '<p class="history-meta">' +
         escapeHtml(m.stadium + " · " + m.city) +
         "</p>" +
         '<p class="history-meta">' +
         escapeHtml(m.date + " · " + m.sector) +
         "</p>" +
-        '<p class="attend-pill">Asistí · QR validado</p>';
+        '<p class="history-meta">Marcador ficticio · no es un resultado oficial</p>' +
+        '<p class="attend-pill">' +
+        escapeHtml(m.attend || "Asistí") +
+        "</p>";
       list.appendChild(article);
     });
   }
@@ -970,7 +1264,7 @@
     }
     if (comms) {
       comms.textContent = state.consents.comms
-        ? "Avisos activados para el evento demo. Puedes apagarlos cuando quieras."
+        ? "Avisos activados para " + currentEvent().title + ". Puedes apagarlos cuando quieras."
         : "Avisos apagados. El ingreso con QR o documento sigue igual.";
     }
     if (rapido) {
@@ -1020,6 +1314,12 @@
         applyTheme(themeEl.getAttribute("data-theme-choice"), true);
         return;
       }
+      const eventEl = e.target.closest("[data-event]");
+      if (eventEl) {
+        e.preventDefault();
+        requestEvent(eventEl.getAttribute("data-event"));
+        return;
+      }
       const goEl = e.target.closest("[data-go]");
       if (goEl) {
         e.preventDefault();
@@ -1064,6 +1364,15 @@
     $("#choiceProvider").addEventListener("click", startProveedor);
     $("#btnAsistida").addEventListener("click", submitAsistida);
     $("#btnVincular").addEventListener("click", vincularBoleta);
+    const confirmEvent = $("#btnConfirmEvent");
+    if (confirmEvent) confirmEvent.addEventListener("click", confirmEventReset);
+    const cancelEvent = $("#btnCancelEvent");
+    if (cancelEvent) {
+      cancelEvent.addEventListener("click", () => {
+        state.pendingEventCode = null;
+        renderEntrada();
+      });
+    }
     $("#btnRotar").addEventListener("click", () => {
       rotateQr(false);
       updateTtlDisplay();
@@ -1084,6 +1393,7 @@
     state,
     rotateQr,
     setTheme(name) { applyTheme(name, true); },
+    setEvent(code) { requestEvent(code); },
     reset() {
       localStorage.removeItem("fanect_p0");
       location.reload();
