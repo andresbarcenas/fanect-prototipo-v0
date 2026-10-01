@@ -303,7 +303,7 @@ html[data-theme="pulso"] .mark-pulso .mark-accent { fill: var(--brand-ink); }
   font: inherit;
   font-weight: 650;
   cursor: pointer;
-  transition: transform .12s, background .15s, opacity .15s;
+  transition: transform .12s, opacity .15s;
   text-align: center;
 }
 .btn:active { transform: scale(.98); }
