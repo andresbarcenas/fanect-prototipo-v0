@@ -20,11 +20,11 @@ P0 estático clicable (HTML/CSS/JS) en GitHub Pages. El MVP son **dos apps en di
 
 | Contexto | URL (Pages) | Entrada | Tab bar |
 |----------|-------------|---------|---------|
-| **Hub** | `/fanect-prototipo-v0/` | Dos tarjetas del mismo peso | No |
+| **Hub** | `/fanect-prototipo-v0/` | Dos botones del mismo peso | No |
 | **App Hincha** | `/fanect-prototipo-v0/hincha/` | `hincha-home` | Inicio · Pase · Beneficios · Perfil |
 | **App Operador** | `/fanect-prototipo-v0/operador/` | `operador-home` | Inicio · Escáner |
 
-Las tarjetas del hub enlazan a `hincha/` y `operador/` (rutas relativas, válidas en el project site y en un servidor local). Dentro de cada app, el único regreso al hub es el enlace **Inicio** (marca, `../`). La pestaña Inicio abre el home de esa app. No hay enlace a la otra app. El QR del hincha **no** enlaza al escáner.
+Los botones del hub enlazan a `hincha/` y `operador/` (rutas relativas, válidas en el project site y en un servidor local). Dentro de cada app, el único regreso al hub es el enlace **Inicio** (`../`). La pestaña Inicio abre el home de esa app. No hay enlace a la otra app ni selector de marca dentro de la app. El QR del hincha **no** enlaza al escáner.
 
 El selector **UMBRAL | VÍNCULO | PULSO** vive en el hub. La ruta queda en `localStorage` (`fanect_theme`) y las dos apps la heredan al cargar `styles.css`.
 
@@ -69,7 +69,7 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 
 | ID | Descripción |
 |----|-------------|
-| `/` | Marca FANECT + dos tarjetas de igual peso (Hincha / Operador) y la línea «Cada app es un recorrido aparte…» |
+| `/` | Marca FANECT + dos botones de igual peso (Hincha / Operador) y la línea «Cada app es un recorrido aparte…» |
 
 ### App Hincha (progreso 1–8)
 
@@ -112,7 +112,7 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 5. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta. En boleta, la etiqueta corta es `Boleta Quentro`; el texto largo queda debajo de la lista. IDs `T-MFC-*` o `T-NAC-*`  
 6. Ver pase + QR Fanect (rotar TTL). **Perfil** → historial (sin marcador oficial) / categoría / privacidad, **Pase**, **Beneficios**  
 7. Si ya hay Fan Pass o boleta y se toca el otro chip: «Cambia el evento y reinicia el pase». Confirmar borra pase, boleta y auditoría para no mezclar `T-MFC` con Nacional  
-8. **Inicio** (marca, arriba) vuelve al hub. Desde ahí, **App Operador**. También se puede abrir `/operador/` directo: es otro documento, no un salto dentro de Hincha. El evento, la boleta y el nonce del QR quedan en `localStorage`, así la auditoría puede mostrar el mismo pase.  
+8. **Inicio** (arriba) vuelve al hub. Desde ahí, **App Operador**. También se puede abrir `/operador/` directo: es otro documento, no un salto dentro de Hincha. El evento, la boleta y el nonce del QR quedan en `localStorage`, así la auditoría puede mostrar el mismo pase.  
 9. Probar los 4 estados → decisión → mini auditoría (origen de boleta: Quentro)  
 
 Deep links (el alias no aparece en los chips). Van en la app, no en el hub:
