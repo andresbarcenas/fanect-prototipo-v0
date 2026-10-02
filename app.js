@@ -1,7 +1,7 @@
 /**
- * FANECT / Tribuna Segura — prototipo P0 (sin backend)
- * Dos apps demos: Hincha y Operador, con hub de entrada.
- * Estado en memoria + localStorage. Todo simulado.
+ * FANECT / Tribuna Segura — P0 estático (sin backend)
+ * Dos apps: Hincha y Operador, con hub de entrada.
+ * Estado en memoria + localStorage.
  */
 (function () {
   "use strict";
@@ -61,18 +61,18 @@
       chip: "Evento: Millonarios",
       clubName: "Millonarios FC",
       title: "Millonarios vs Atlético Nacional",
-      subtitle: "Liga BetPlay (demo)",
+      subtitle: "Liga BetPlay",
       venue: "El Campín",
       city: "Bogotá",
       when: "Sábado 20:00",
       placeLine: "El Campín · Bogotá · Sábado 20:00",
-      gate: "Puerta 3 · El Campín (demo)",
+      gate: "Puerta 3 · El Campín",
       shift: "20:00 – 22:30",
       desk: "Entradas Millonarios",
       tickets: [
-        { id: "T-MFC-NORTE-12-08", sector: "Lateral Norte", fila: "12", asiento: "08", titular: "Andrés Demo" },
-        { id: "T-MFC-SUR-05-21", sector: "Lateral Sur", fila: "05", asiento: "21", titular: "Andrés Demo" },
-        { id: "T-MFC-OCC-A-14", sector: "Occidental", fila: "A", asiento: "14", titular: "Andrés Demo" },
+        { id: "T-MFC-NORTE-12-08", sector: "Lateral Norte", fila: "12", asiento: "08", titular: "Andrés Díaz" },
+        { id: "T-MFC-SUR-05-21", sector: "Lateral Sur", fila: "05", asiento: "21", titular: "Andrés Díaz" },
+        { id: "T-MFC-OCC-A-14", sector: "Occidental", fila: "A", asiento: "14", titular: "Andrés Díaz" },
       ],
       history: [
         { rival: "Millonarios vs Atlético Nacional", stadium: "El Campín", city: "Bogotá", date: "12 sep 2026", sector: "Occidental", season: true, attend: "Asistí · QR validado" },
@@ -86,18 +86,18 @@
       chip: "Evento: Nacional",
       clubName: "Atlético Nacional",
       title: "Atlético Nacional vs Millonarios",
-      subtitle: "Liga BetPlay (demo)",
+      subtitle: "Liga BetPlay",
       venue: "Atanasio",
       city: "Medellín",
       when: "Jueves 19:30",
       placeLine: "Atanasio · Medellín · Jueves 19:30",
-      gate: "Acceso Occidental · Atanasio (demo)",
+      gate: "Acceso Occidental · Atanasio",
       shift: "19:30 – 22:00",
       desk: "Tribuna Verde",
       tickets: [
-        { id: "T-NAC-OCC-B-10", sector: "Occidental Baja", fila: "10", asiento: "10", titular: "Andrés Demo" },
-        { id: "T-NAC-ORI-A-22", sector: "Oriental Alta", fila: "A", asiento: "22", titular: "Andrés Demo" },
-        { id: "T-NAC-NORTE-08-15", sector: "Norte", fila: "08", asiento: "15", titular: "Andrés Demo" },
+        { id: "T-NAC-OCC-B-10", sector: "Occidental Baja", fila: "10", asiento: "10", titular: "Andrés Díaz" },
+        { id: "T-NAC-ORI-A-22", sector: "Oriental Alta", fila: "A", asiento: "22", titular: "Andrés Díaz" },
+        { id: "T-NAC-NORTE-08-15", sector: "Norte", fila: "08", asiento: "15", titular: "Andrés Díaz" },
       ],
       history: [
         { rival: "Atlético Nacional vs Millonarios", stadium: "Atanasio", city: "Medellín", date: "12 sep 2026", sector: "Occidental Baja", season: true, attend: "Asistí · QR validado" },
@@ -109,7 +109,7 @@
   const TIER_UNLOCKED = [
     { title: "Fan Pass del evento", desc: "Identidad confirmada para este piloto" },
     { title: "QR de ingreso", desc: "Boleta nominativa y pase dinámico" },
-    { title: "Fila preferencial", desc: "Mock de categoría · beneficio de demostración" },
+    { title: "Fila preferencial", desc: "Beneficio de categoría en el piloto" },
   ];
   const TIER_LOCKED = [
     { title: "Hincha frecuente", desc: "Se abre al llegar a 5 asistencias de temporada" },
@@ -200,10 +200,10 @@
   const state = {
     app: "hub",
     screen: "hub",
-    nombre: "Andrés Demo",
+    nombre: "Andrés Díaz",
     doc: "1.234.567.890",
     cel: "300 123 4567",
-    email: "demo@fanect.co",
+    email: "andres@fanect.co",
     consents: { identidad: false, acceso: false, comms: false },
     prefs: { noAds: true, accesoRapido: false },
     consentsKnown: false,
@@ -288,6 +288,18 @@
       }
       if (d.eventCode && EVENTS[d.eventCode]) state.eventCode = d.eventCode;
       if (Array.isArray(d.auditLog)) state.auditLog = d.auditLog;
+      if (state.nombre === "Andrés Demo") state.nombre = "Andrés Díaz";
+      if (String(state.email).toLowerCase() === "demo@fanect.co") state.email = "andres@fanect.co";
+      if (state.ticket) {
+        if (state.ticket.titular === "Andrés Demo") state.ticket.titular = state.nombre;
+        if (/simulado/i.test(state.ticket.origenBoleta || "")) state.ticket.origenBoleta = "Quentro";
+      }
+      state.auditLog.forEach((row) => {
+        if (!row) return;
+        if (row.nombre === "Andrés Demo") row.nombre = state.nombre;
+        if (row.gate) row.gate = String(row.gate).replace(/\s*\(demo\)/gi, "");
+        if (/simulado/i.test(row.origenBoleta || "")) row.origenBoleta = "Quentro";
+      });
       if (!ticketBelongs(state.ticket, state.eventCode)) {
         state.ticket = null;
         state.qrNonce = null;
@@ -527,11 +539,11 @@
   function submitAsistida() {
     const est = $("#asistidaEstado").value;
     if (est === "rechazado") {
-      alert("Verificación rechazada por el agente (demo). Elige «Aprobado» para continuar el happy path.");
+      alert("Verificación rechazada por el agente. Elige «Aprobado» para continuar.");
       return;
     }
     if (est === "pendiente") {
-      alert("Aún pendiente de revisión. En el demo, marca «Aprobado por agente».");
+      alert("Aún pendiente de revisión. Marca «Aprobado por agente» para continuar.");
       return;
     }
     go("resultado");
@@ -541,9 +553,9 @@
     clearTimeout(providerTimer);
     $("#provText").textContent = "Conectando con proveedor de identidad…";
     providerTimer = setTimeout(() => {
-      $("#provText").textContent = "Validando documento (mock)…";
+      $("#provText").textContent = "Validando documento…";
       providerTimer = setTimeout(() => {
-        $("#provText").textContent = "Verificación completada (simulado).";
+        $("#provText").textContent = "Verificación completada.";
         providerTimer = setTimeout(() => go("resultado"), 600);
       }, 900);
     }, 800);
@@ -553,12 +565,12 @@
     const pathLabel =
       state.verifyPath === "asistida"
         ? "Ruta asistida no biométrica"
-        : "Proveedor de identidad (mock)";
+        : "Proveedor de identidad";
     $("#resultadoTitulo").textContent = "Identidad verificada";
     $("#resultadoDesc").textContent =
       state.verifyPath === "asistida"
         ? "Confirmada por agente del piloto (sin biometría 1:N)."
-        : "Confirmada vía flujo de proveedor simulado.";
+        : "Confirmada con el proveedor de identidad. No hay integración real.";
     $("#resultadoMeta").innerHTML =
       "<dl>" +
       "<dt>Nombre</dt><dd>" +
@@ -582,6 +594,12 @@
       "</dl>";
     const tier = $("#resultadoTier");
     if (tier) tier.textContent = CATEGORY_NAME;
+  }
+
+  function origenLabel(value) {
+    const raw = String(value || "").trim();
+    if (!raw || /simulado/i.test(raw)) return "Quentro";
+    return raw;
   }
 
   function escapeHtml(s) {
@@ -666,7 +684,7 @@
 
   function boletaSyncCopy(ev) {
     return (
-      "Sincronización simulada con Quentro (post-PoC). La tiquetera de este evento es " +
+      "La boleta nominativa figura en Quentro. La tiquetera de este evento es " +
       ev.desk +
       ". FANECT no llama a una API Quentro: en la puerta el operador lee el QR Fanect."
     );
@@ -706,7 +724,7 @@
           asiento: t.asiento,
           titular: state.nombre || t.titular,
           eventCode: ev.code,
-          origenBoleta: "quentro_simulado",
+          origenBoleta: "Quentro",
         };
         renderTickets();
         $("#btnVincular").disabled = false;
@@ -732,7 +750,7 @@
       asiento: src.asiento,
       titular: state.nombre || src.titular,
       eventCode: state.eventCode,
-      origenBoleta: "quentro_simulado",
+      origenBoleta: "Quentro",
     };
   }
 
@@ -758,7 +776,7 @@
       "v0",
       "event=" + ev.code,
       "club=" + ev.club,
-      "origen=quentro_simulado",
+      "origen=quentro",
       "pass=" + (state.passId || ""),
       "ticket=" + (t.id || ""),
       "nonce=" + (state.qrNonce || ""),
@@ -881,7 +899,7 @@
       eventTitle: ev.title,
       club: ev.clubName,
       gate: ev.gate,
-      origenBoleta: "quentro_simulado",
+      origenBoleta: "Quentro",
     };
     state.lastDecision = decision;
     state.auditLog.push(decision);
@@ -909,7 +927,7 @@
       "<dt>Motivo</dt><dd>" +
       escapeHtml(d.reason) +
       "</dd>" +
-      "<dt>Estado QR demo</dt><dd>" +
+      "<dt>Estado del QR</dt><dd>" +
       escapeHtml(d.state) +
       "</dd>" +
       "<dt>Hora</dt><dd>" +
@@ -928,7 +946,7 @@
       escapeHtml(d.ticketId || "—") +
       "</dd>" +
       "<dt>Origen boleta</dt><dd>" +
-      escapeHtml(d.origenBoleta || "quentro_simulado") +
+      escapeHtml(origenLabel(d.origenBoleta)) +
       "</dd>" +
       "</dl>";
   }
@@ -977,12 +995,12 @@
       escapeHtml((d.eventCode || "") + (d.eventTitle ? " · " + d.eventTitle : "")) +
       "</dd>" +
       "<dt>Origen boleta</dt><dd>" +
-      escapeHtml(d.origenBoleta || "quentro_simulado") +
+      escapeHtml(origenLabel(d.origenBoleta)) +
       "</dd>" +
       "<dt>Puerta</dt><dd>" +
       escapeHtml(d.gate || "—") +
       "</dd>" +
-      "<dt>Canal</dt><dd>Escáner puerta · QR Fanect · SIMULADO</dd>" +
+      "<dt>Canal</dt><dd>Escáner puerta · QR Fanect</dd>" +
       "</dl>";
   }
 
@@ -1047,7 +1065,7 @@
     }
     const ev = currentEvent();
     const lede = $("#hinchaLede");
-    if (lede) lede.textContent = "Identidad digital + boleta nominativa para " + ev.title + " (demo).";
+    if (lede) lede.textContent = "Identidad digital + boleta nominativa para " + ev.title + ".";
     const pending = $("#hinchaPending");
     if (pending) pending.hidden = !state.pendingEventCode;
     if (!ready) return;
@@ -1076,13 +1094,13 @@
     paintClubLabel($("#perfilClubLabel"));
     $("#perfilEvento").textContent = ev.title + " · " + ev.placeLine;
     const favorito = $("#perfilFavorito");
-    if (favorito) favorito.textContent = "Club del evento demo: " + ev.clubName;
+    if (favorito) favorito.textContent = "Club del evento: " + ev.clubName;
     $("#perfilDoc").textContent = maskDoc(state.doc);
     $("#perfilCel").textContent = maskPhone(state.cel);
     $("#perfilEmail").textContent = maskEmail(state.email);
     $("#perfilPassBadge").innerHTML = ready
       ? '<span class="badge badge-ok">FAN PASS ACTIVO</span>'
-      : '<span class="badge badge-sim">FAN PASS PENDIENTE</span>';
+      : '<span class="badge badge-lock">FAN PASS PENDIENTE</span>';
     const fp = $("#perfilFp");
     fp.textContent = ready ? "FP-" + state.passId : "Sin Fan Pass";
     fp.classList.toggle("is-pending", !ready);
@@ -1111,7 +1129,7 @@
     $("#historialCount").textContent = String(season.length);
     paintClubLabel($("#historialClubLabel"));
     const clubLine = $("#historialClub");
-    if (clubLine) clubLine.textContent = ev.clubName + " · piloto demo";
+    if (clubLine) clubLine.textContent = ev.clubName + " · piloto";
     const list = $("#historialList");
     list.innerHTML = "";
     eventHistory().forEach((m) => {
@@ -1120,7 +1138,7 @@
       article.innerHTML =
         '<div class="history-top"><h3>' +
         escapeHtml(m.rival) +
-        '</h3><span class="badge badge-sim">SIMULADO</span></div>' +
+        "</h3></div>" +
         '<p class="history-meta">' +
         escapeHtml(m.stadium + " · " + m.city) +
         "</p>" +
@@ -1202,7 +1220,7 @@
       },
       {
         title: "Fila preferencial",
-        desc: "Mock ligado a la categoría verificada.",
+        desc: "Ligado a la categoría verificada.",
         status: ready ? "Disponible" : "Requiere categoría",
         kind: ready ? "ok" : "lock",
         go: "categoria",
@@ -1260,7 +1278,7 @@
     if (noAds) {
       noAds.textContent = state.prefs.noAds
         ? "Protegido en el piloto: los datos de acceso no alimentan anuncios ni se venden."
-        : "Preferencia simulada para permitir publicidad. En este piloto igual no hay anuncios ni venta de datos.";
+        : "Preferencia para permitir publicidad. En este piloto igual no hay anuncios ni venta de datos.";
     }
     if (comms) {
       comms.textContent = state.consents.comms
@@ -1269,7 +1287,7 @@
     }
     if (rapido) {
       rapido.textContent = state.prefs.accesoRapido
-        ? "Atajo activo (simulado). El QR y el documento en la ruta asistida siguen disponibles. Sin reconocimiento facial en la puerta."
+        ? "Atajo activo. El QR y el documento en la ruta asistida siguen disponibles. Sin reconocimiento facial en la puerta."
         : "Apagado. Entras con el QR del Fan Pass o con documento en la ruta asistida. Sin reconocimiento facial en la puerta.";
     }
   }

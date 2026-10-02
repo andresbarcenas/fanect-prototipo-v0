@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#121a24" />
-<title>FANECT — Tribuna Segura · prototipo</title>
+<title>FANECT — Tribuna Segura</title>
 <script>
 /* Default theme is umbral. Restore the last route before CSS paints. */
 (function () {
@@ -27,7 +27,7 @@
 <div class="device-screen">
 <div class="dynamic-island" aria-hidden="true"></div>
 <div id="app" class="phone-frame" data-app="hub">
-<!-- Status bar mock (iOS chrome; not a product claim) -->
+<!-- Status bar (iOS chrome; not a product claim) -->
 <div class="status-bar" aria-hidden="true">
 <span class="status-time" id="statusTime">9:41</span>
 <span class="status-icons">
@@ -49,7 +49,7 @@
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
 <span class="progress-label" id="progressLabel">Paso 1 de 8</span>
 </div>
-<!-- SCREEN: Hub (demo entry) -->
+<!-- SCREEN: Hub -->
 <section id="screen-hub" class="screen active" data-screen="hub">
 <div class="screen-body centered home-body">
 <div class="brand-block">
@@ -60,11 +60,8 @@
 </div>
 <h1 class="brand-name">FANECT</h1>
 <p class="product-name">Tribuna Segura</p>
-<span class="badge badge-sim">PROTOTIPO DEMO · P0</span>
 </div>
-<p class="hub-disclaimer">DEMO · sin licencia de marca · datos simulados</p>
-<p class="lede">Dos productos para la demo institucional. Elige la app a mostrar; no hay un flujo continuo entre hincha y operador.</p>
-<p class="footnote">Sin backend. Todo simulado en este dispositivo. No hay integraciones reales. Rutas de marca provisional: el nombre no incluye tagline y ninguna ruta implica aval institucional ni tecnología implementada.</p>
+<p class="lede">Elige App Hincha o App Operador. No hay un flujo continuo entre roles.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block hub-card-btn" data-go="hincha-home">
@@ -93,15 +90,13 @@
 </div>
 <h1 class="brand-name brand-name-sm">FANECT</h1>
 <p class="product-name">Tu acceso al evento</p>
-<span class="badge badge-sim">SIMULADO</span>
 </div>
-<p class="lede" id="hinchaLede">Identidad digital + boleta nominativa para Millonarios vs Atlético Nacional (demo).</p>
+<p class="lede" id="hinchaLede">Identidad digital + boleta nominativa para Millonarios vs Atlético Nacional.</p>
 </div>
 <div id="hinchaDash" hidden>
 <div class="dash-hello">
 <div class="dash-kicker-row">
 <span class="kicker">Tu hincha</span>
-<span class="badge badge-sim">SIMULADO</span>
 </div>
 <h3 id="dashNombre">Hola, Andrés</h3>
 <p class="club-label" id="dashClubLabel" data-club="millonarios">Evento: Millonarios</p>
@@ -160,11 +155,11 @@
 <div class="event-badge">ACCESO POR CÓDIGO</div>
 <p class="club-label" id="eventClubLabel" data-club="millonarios">Evento: Millonarios</p>
 <h3 id="eventTitle">Millonarios vs Atlético Nacional</h3>
-<p class="muted" id="eventComp">Liga BetPlay (demo)</p>
+<p class="muted" id="eventComp">Liga BetPlay</p>
 <p class="muted" id="eventPlace">El Campín · Bogotá · Sábado 20:00</p>
-<p class="muted small">Evento por invitación (piloto FANECT) · código del organizador. SIMULADO · sin venta real · sin API Quentro.</p>
+<p class="muted small">Evento por invitación (piloto FANECT) · código del organizador. Sin venta en esta pantalla · sin API Quentro.</p>
 </div>
-<div class="club-switch" role="radiogroup" aria-label="Evento de la demo">
+<div class="club-switch" role="radiogroup" aria-label="Evento">
 <button type="button" class="club-chip is-selected" role="radio" data-event="MFC-DEMO-2026" data-club="millonarios" aria-checked="true">Evento: Millonarios</button>
 <button type="button" class="club-chip" role="radio" data-event="NAC-DEMO-2026" data-club="nacional" aria-checked="false">Evento: Nacional</button>
 </div>
@@ -178,7 +173,7 @@
 <input type="text" id="eventCode" value="MFC-DEMO-2026" readonly class="input" />
 </label>
 <p class="hint" id="aliasHint" hidden>Deep link resuelto al evento vigente.</p>
-<p class="hint"><span class="badge badge-sim">SIMULADO</span> En producción el hincha llega por link o QR del organizador. El acceso en puerta es el QR Fanect.</p>
+<p class="hint">En producción el hincha llega por link o QR del organizador. El acceso en puerta es el QR Fanect.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block" data-go="registro">Continuar al registro</button>
@@ -191,10 +186,10 @@
 <h2>Registro</h2>
 </header>
 <div class="screen-body">
-<p class="muted small">Datos mínimos para el piloto. Campos de demostración.</p>
+<p class="muted small">Datos mínimos para el piloto.</p>
 <label class="field">
 <span class="field-label">Nombre completo</span>
-<input type="text" id="regNombre" class="input" value="Andrés Demo" autocomplete="name" />
+<input type="text" id="regNombre" class="input" value="Andrés Díaz" autocomplete="name" />
 </label>
 <label class="field">
 <span class="field-label">Documento (CC)</span>
@@ -206,7 +201,7 @@
 </label>
 <label class="field">
 <span class="field-label">Correo</span>
-<input type="email" id="regEmail" class="input" value="demo@fanect.co" />
+<input type="email" id="regEmail" class="input" value="andres@fanect.co" />
 </label>
 </div>
 <div class="screen-actions">
@@ -257,14 +252,12 @@
 <button type="button" class="btn-icon" data-go="consentimientos" aria-label="Volver">←</button>
 <h2>Verificación de identidad</h2>
 </header>
-<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body">
-<p class="muted small">Elige cómo verificar. En P0 la ruta biométrica es mock; la asistida no biométrica es la rama real del piloto.</p>
+<p class="muted small">Elige cómo verificar. La ruta con proveedor queda para una integración posterior; la asistida no biométrica es la rama del piloto.</p>
 <div class="choice-cards">
 <button type="button" class="choice-card" id="choiceProvider">
 <span class="choice-title">Proveedor de identidad</span>
-<span class="choice-desc">Flujo mock de verificación con proveedor (futuro integrado).</span>
-<span class="badge badge-sim">SIMULADO</span>
+<span class="choice-desc">Verificación con proveedor (integración posterior).</span>
 </button>
 <button type="button" class="choice-card choice-card-accent" id="choiceAsistida">
 <span class="choice-title">Ruta asistida no biométrica</span>
@@ -280,7 +273,6 @@
 <button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
 <h2>Ruta asistida</h2>
 </header>
-<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body">
 <div class="info-card">
 <p><strong>Pasos del operador de verificación</strong> (sin biometría 1:N):</p>
@@ -291,11 +283,11 @@
 </ol>
 </div>
 <label class="field">
-<span class="field-label">Documento (foto) <span class="badge badge-sim">SIMULADO</span></span>
-<div class="fake-upload" id="uploadDoc">📄 Documento cargado · CC demo</div>
+<span class="field-label">Documento (foto)</span>
+<div class="fake-upload" id="uploadDoc">📄 Documento cargado · CC lista</div>
 </label>
 <label class="field">
-<span class="field-label">Selfie de control <span class="badge badge-sim">SIMULADO</span></span>
+<span class="field-label">Selfie de control</span>
 <div class="fake-upload" id="uploadSelfie">📷 Selfie de control · lista</div>
 </label>
 <label class="field">
@@ -311,17 +303,16 @@
 <button type="button" class="btn btn-primary btn-block" id="btnAsistida">Enviar a verificación</button>
 </div>
 </section>
-<!-- 4c. Proveedor mock -->
+<!-- 4c. Proveedor de identidad -->
 <section id="screen-proveedor" class="screen" data-screen="proveedor" data-fan-step="4">
 <header class="screen-header">
 <button type="button" class="btn-icon" data-go="verificacion" aria-label="Volver">←</button>
-<h2>Proveedor (mock)</h2>
+<h2>Proveedor de identidad</h2>
 </header>
-<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body centered">
 <div class="spinner" id="provSpinner" aria-hidden="true"></div>
 <p id="provText">Conectando con proveedor de identidad…</p>
-<p class="hint"><span class="badge badge-sim">SIMULADO</span> No hay integración real.</p>
+<p class="hint">No hay integración real.</p>
 </div>
 </section>
 <!-- 5. Resultado verificación -->
@@ -329,7 +320,6 @@
 <header class="screen-header">
 <h2>Resultado</h2>
 </header>
-<p class="idv-demo-banner" role="status"><strong>DEMO · SIMULADO</strong><span>No hay integración real.</span></p>
 <div class="screen-body centered">
 <div class="result-icon success" aria-hidden="true">✓</div>
 <h3 id="resultadoTitulo">Identidad verificada</h3>
@@ -352,9 +342,9 @@
 <span class="pass-brand">FANECT</span>
 <span class="badge badge-ok">ACTIVO</span>
 </div>
-<h3 id="passNombre">Andrés Demo</h3>
+<h3 id="passNombre">Andrés Díaz</h3>
 <p class="club-label" id="passClubLabel" data-club="millonarios">Evento: Millonarios</p>
-<p class="muted" id="passEvento">Millonarios vs Atlético Nacional · Liga BetPlay (demo)</p>
+<p class="muted" id="passEvento">Millonarios vs Atlético Nacional · Liga BetPlay</p>
 <p class="muted small" id="passPlace">El Campín · Bogotá · Sábado 20:00</p>
 <p class="tier-line"><span class="badge badge-ok" id="fanpassTier">Hincha verificado · Piloto</span></p>
 <div class="pass-id">FP-<span id="passId">A1B2C3</span></div>
@@ -373,9 +363,9 @@
 <h2>Vincular boleta</h2>
 </header>
 <div class="screen-body">
-<p class="muted small"><span class="badge badge-sim">Quentro · simulado</span> Elige una boleta nominativa de demo.</p>
+<p class="muted small"><strong>Boleta Quentro.</strong> Elige una boleta nominativa.</p>
 <div class="ticket-list" id="ticketList" role="listbox" aria-label="Boletas disponibles"></div>
-<p class="hint" id="boletaHint">Sincronización simulada con Quentro (post-PoC). La tiquetera de este evento es Entradas Millonarios. FANECT no llama a una API Quentro: en la puerta el operador lee el QR Fanect.</p>
+<p class="hint" id="boletaHint">La boleta nominativa figura en Quentro. La tiquetera de este evento es Entradas Millonarios. FANECT no llama a una API Quentro: en la puerta el operador lee el QR Fanect.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block" id="btnVincular" disabled>Vincular boleta seleccionada</button>
@@ -415,7 +405,7 @@
 <p class="footnote">Muestra este QR Fanect en la puerta. Quentro no se consulta en el torniquete. La validación se hace en la App Operador.</p>
 </div>
 <div class="screen-actions">
-<button type="button" class="btn btn-secondary btn-block" id="btnRotar">Rotar QR (simulado)</button>
+<button type="button" class="btn btn-secondary btn-block" id="btnRotar">Rotar QR</button>
 <button type="button" class="btn btn-ghost btn-block" data-go="hub">Cambiar de app</button>
 </div>
 </section>
@@ -423,16 +413,15 @@
 <section id="screen-perfil" class="screen" data-screen="perfil">
 <header class="screen-header">
 <h2>Perfil</h2>
-<span class="badge badge-sim">SIMULADO</span>
 </header>
 <div class="screen-body">
 <div class="profile-hero">
 <p class="kicker">Perfil y decisiones</p>
 <div class="avatar" id="perfilIniciales" aria-hidden="true">AD</div>
-<h3 id="perfilNombre">Andrés Demo</h3>
+<h3 id="perfilNombre">Andrés Díaz</h3>
 <p class="club-label" id="perfilClubLabel" data-club="millonarios">Evento: Millonarios</p>
 <p class="muted small" id="perfilEvento">Millonarios vs Atlético Nacional · El Campín · Bogotá · Sábado 20:00</p>
-<p class="muted small" id="perfilFavorito">Club del evento demo: Millonarios FC</p>
+<p class="muted small" id="perfilFavorito">Club del evento: Millonarios FC</p>
 <div id="perfilPassBadge"><span class="badge badge-ok">FAN PASS ACTIVO</span></div>
 <p class="pass-id" id="perfilFp">FP-A1B2C3</p>
 </div>
@@ -482,16 +471,15 @@
 <p class="kicker">Esta temporada</p>
 <h3><span id="historialCount">3</span> partidos</h3>
 <p class="club-label" id="historialClubLabel" data-club="millonarios">Evento: Millonarios</p>
-<p class="muted small" id="historialClub">Millonarios FC · piloto demo</p>
+<p class="muted small" id="historialClub">Millonarios FC · piloto</p>
 </div>
-<span class="badge badge-sim">SIMULADO</span>
 </div>
 <div class="history-list" id="historialList"></div>
-<p class="footnote">Asistencias de demostración. Cada fila es SIMULADO y no trae marcador oficial. Quentro no está conectado.</p>
+<p class="footnote">Asistencias de la temporada. Ninguna fila trae marcador oficial. Quentro no está conectado.</p>
 </div>
 <div id="historialEmpty" class="empty-card" hidden>
 <h3>Aún no hay partidos</h3>
-<p class="muted">Activa tu Fan Pass en el evento para ver el historial simulado del piloto.</p>
+<p class="muted">Activa tu Fan Pass en el evento para ver el historial del piloto.</p>
 </div>
 </div>
 <div class="screen-actions" id="historialActionsEmpty" hidden>
@@ -506,7 +494,6 @@
 </header>
 <div class="screen-body">
 <div class="tier-card">
-<span class="badge badge-sim">SIMULADO</span>
 <p class="kicker">Categoría del piloto</p>
 <h3 id="categoriaNombre">Hincha verificado · Piloto</h3>
 <p class="muted small" id="categoriaNext">Siguiente nivel: Frecuente</p>
@@ -526,14 +513,13 @@
 <p class="field-label">Por desbloquear</p>
 <ul class="unlock-list" id="tierLocked"></ul>
 </div>
-<p class="hint">La categoría es una simulación del piloto. No es una membresía de un club real ni un puntaje de riesgo.</p>
+<p class="hint">La categoría es del piloto. No es una membresía de un club real ni un puntaje de riesgo.</p>
 </div>
 </section>
 <!-- Beneficios -->
 <section id="screen-beneficios" class="screen" data-screen="beneficios">
 <header class="screen-header">
 <h2>Más beneficios</h2>
-<span class="badge badge-sim">SIMULADO</span>
 </header>
 <div class="screen-body">
 <p class="muted small">El pase digital abre la puerta y, en el piloto, estos beneficios. Merch, contenido y apuestas quedan para después.</p>
@@ -585,7 +571,7 @@
 <input type="checkbox" id="prefRapido" class="toggle" />
 </label>
 </div>
-<p class="hint"><span class="badge badge-sim">SIMULADO</span> Estas preferencias quedan solo en este dispositivo.</p>
+<p class="hint">Estas preferencias quedan solo en este dispositivo.</p>
 </div>
 <div class="screen-actions">
 <button type="button" class="btn btn-primary btn-block" data-go="perfil">Volver al perfil</button>
@@ -599,15 +585,14 @@
 </header>
 <div class="screen-body">
 <div class="info-card session-card">
-<div class="event-badge">SESIÓN DE PUERTA · SIMULADO</div>
+<div class="event-badge">SESIÓN DE PUERTA</div>
 <p class="club-label" id="opClubLabel" data-club="millonarios">Evento: Millonarios</p>
-<h3>Operador Demo</h3>
+<h3>Operador de puerta</h3>
 <dl class="session-meta">
-<div><dt>Puerta / gate</dt><dd id="opGate">Puerta 3 · El Campín (demo)</dd></div>
+<div><dt>Puerta / gate</dt><dd id="opGate">Puerta 3 · El Campín</dd></div>
 <div><dt>Evento</dt><dd id="opEvento">Millonarios vs Atlético Nacional · MFC-DEMO-2026</dd></div>
 <div><dt>Turno</dt><dd id="opTurno">20:00 – 22:30</dd></div>
 </dl>
-<span class="badge badge-sim">SIMULADO</span>
 </div>
 <p class="muted small">Escanea el QR Fanect del hincha y registra la decisión de ingreso. Quentro no se llama en la puerta. Esta app es independiente del flujo hincha.</p>
 </div>
@@ -625,9 +610,9 @@
 <div class="screen-body">
 <div class="scanner-view">
 <div class="scanner-frame"></div>
-<p class="muted small">Vista cámara · <span class="badge badge-sim">SIMULADO</span></p>
+<p class="muted small">Vista cámara</p>
 </div>
-<p class="field-label">Estado del QR a escanear (demo)</p>
+<p class="field-label">Estado del QR a escanear</p>
 <div class="state-grid" id="stateGrid">
 <button type="button" class="state-btn" data-qr-state="valido">Válido</button>
 <button type="button" class="state-btn" data-qr-state="usado">Usado</button>

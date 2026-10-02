@@ -1,4 +1,4 @@
-/* FANECT / Tribuna Segura — prototipo móvil
+/* FANECT / Tribuna Segura — P0 móvil
    Brand routes (T-15), sampled from the 30 sep 2026 board
    “Fanect / tres rutas de identidad”. Default theme: umbral
    (dark fondo of route A — closest to the previous dark POC chrome).
@@ -6,7 +6,7 @@
 
    STATUS TOKENS below are constant. Do not override them inside
    [data-theme]. Allow / deny / review / expired / used / replay /
-   SIMULADO / RAMA P0 must not follow UMBRAL orange, VÍNCULO blue,
+   --status-sim-* / RAMA P0 must not follow UMBRAL orange, VÍNCULO blue,
    or PULSO magenta. */
 :root {
   /* —— Semantic status (fixed across every data-theme) —— */
@@ -135,7 +135,7 @@ body {
   min-height: 100dvh;
 }
 
-/* Desktop demo: centered iPhone 14/15 shell. Narrow viewports drop the bezel. */
+/* Desktop: centered iPhone 14/15 shell. Narrow viewports drop the bezel. */
 .device-stage {
   min-height: 100dvh;
   display: flex;
@@ -1010,7 +1010,7 @@ html[data-theme="pulso"] .logo-mark .mark-pulso { display: block; }
 .brand-block, .home-body .lede, .home-body .footnote { position: relative; z-index: 1; }
 
 
-/* ——— Two-app demo split (T-09 / T-10 / T-11) ——— */
+/* ——— Two-app split (T-09 / T-10 / T-11) ——— */
 .tab-bar[hidden] { display: none !important; }
 
 .badge-app {
@@ -1130,32 +1130,6 @@ html[data-theme="pulso"] .logo-mark .mark-pulso { display: block; }
   font-size: 10px;
   line-height: 1.3;
   color: var(--muted);
-}
-
-/* IDV overlay: yellow/black, never a KYC-green. Colors are status tokens. */
-.idv-demo-banner {
-  flex-shrink: 0;
-  margin: 0;
-  background: var(--status-sim-bg);
-  color: var(--status-sim-ink);
-  border-top: 2px solid var(--status-sim-border);
-  border-bottom: 2px solid var(--status-sim-border);
-  padding: 8px 14px;
-  text-align: center;
-  line-height: 1.3;
-}
-.idv-demo-banner strong {
-  display: block;
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-}
-.idv-demo-banner span {
-  display: block;
-  margin-top: 2px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
 }
 
 /* ——— App Hincha: perfil, historial, categoría, beneficios, privacidad ——— */
@@ -1505,16 +1479,7 @@ button.benefit-card:active { transform: scale(.99); }
 /* Placeholder club colors (#0B3D91 Millonarios, #0B7A3B Nacional).
    Only .club-chip and .club-label may use them.
    Do not paint --brand, UMBRAL|VÍNCULO|PULSO, the theme switcher,
-   --status-*, allow/deny, TTL, or DEMO · SIMULADO banners. */
-.hub-disclaimer {
-  position: relative;
-  z-index: 1;
-  margin: 8px 0 0;
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .01em;
-  color: var(--muted);
-}
+   --status-*, allow/deny, TTL, or --status-sim-* (defined, not a brand accent). */
 .club-switch {
   display: grid;
   grid-template-columns: 1fr 1fr;
