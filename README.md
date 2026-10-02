@@ -112,7 +112,7 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 5. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta. En boleta, la etiqueta corta es `Boleta Quentro`; el texto largo queda debajo de la lista. IDs `T-MFC-*` o `T-NAC-*`  
 6. Ver pase + QR Fanect (rotar TTL). **Perfil** → historial (sin marcador oficial) / categoría / privacidad, **Pase**, **Beneficios**  
 7. Si ya hay Fan Pass o boleta y se toca el otro chip: «Cambia el evento y reinicia el pase». Confirmar borra pase, boleta y auditoría para no mezclar `T-MFC` con Nacional  
-8. **Inicio** (marca, arriba) vuelve al hub. Desde ahí, **App Operador**. También se puede abrir `/operador/` directo: es otro documento, no un salto dentro de Hincha. El evento guardado en `localStorage` se lee al entrar.  
+8. **Inicio** (marca, arriba) vuelve al hub. Desde ahí, **App Operador**. También se puede abrir `/operador/` directo: es otro documento, no un salto dentro de Hincha. El evento, la boleta y el nonce del QR quedan en `localStorage`, así la auditoría puede mostrar el mismo pase.  
 9. Probar los 4 estados → decisión → mini auditoría (origen de boleta: Quentro)  
 
 Deep links (el alias no aparece en los chips). Van en la app, no en el hub:

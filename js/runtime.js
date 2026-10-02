@@ -252,6 +252,9 @@
         prefs: state.prefs,
         consentsKnown: state.consentsKnown,
         eventCode: state.eventCode,
+        qrNonce: state.qrNonce,
+        qrRotation: state.qrRotation,
+        qrExpiresAt: state.qrExpiresAt,
         auditLog: state.auditLog.slice(-20),
       }));
     } catch (_) {}
@@ -282,6 +285,9 @@
         state.prefs = Object.assign(state.prefs, d.prefs);
       }
       if (d.eventCode && EVENTS[d.eventCode]) state.eventCode = d.eventCode;
+      if (d.qrNonce) state.qrNonce = d.qrNonce;
+      if (d.qrRotation) state.qrRotation = d.qrRotation;
+      if (d.qrExpiresAt) state.qrExpiresAt = d.qrExpiresAt;
       if (Array.isArray(d.auditLog)) state.auditLog = d.auditLog;
       if (state.nombre === "Andrés Demo") state.nombre = "Andrés Díaz";
       if (String(state.email).toLowerCase() === "demo@fanect.co") state.email = "andres@fanect.co";
@@ -757,7 +763,7 @@
   function ensureQr() {
     if (!state.passId) state.passId = uid(6);
     if (!boundTicket()) state.ticket = ticketSnapshot(eventTickets()[0]);
-    if (!state.qrNonce || !state.qrExpiresAt) rotateQr(true);
+    if (!state.qrNonce || !state.qrExpiresAt || state.qrExpiresAt <= Date.now()) rotateQr(true);
   }
 
   function rotateQr(silent) {
