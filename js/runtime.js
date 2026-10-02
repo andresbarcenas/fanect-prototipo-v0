@@ -53,6 +53,7 @@
   const CATEGORY_NEXT = "Frecuente";
   const CATEGORY_GOAL = 5;
   const DEFAULT_EVENT = "MFC-DEMO-2026";
+  const ORIGEN_BOLETA = "Tiquetera del club";
 
   /* CLASICO-DEMO-2026 is not a third event. It only resolves from a deep link. */
   const EVENT_ALIAS = "CLASICO-DEMO-2026";
@@ -293,13 +294,13 @@
       if (String(state.email).toLowerCase() === "demo@fanect.co") state.email = "andres@fanect.co";
       if (state.ticket) {
         if (state.ticket.titular === "Andrés Demo") state.ticket.titular = state.nombre;
-        if (/simulado/i.test(state.ticket.origenBoleta || "")) state.ticket.origenBoleta = "Quentro";
+        state.ticket.origenBoleta = origenLabel(state.ticket.origenBoleta);
       }
       state.auditLog.forEach((row) => {
         if (!row) return;
         if (row.nombre === "Andrés Demo") row.nombre = state.nombre;
         if (row.gate) row.gate = String(row.gate).replace(/\s*\(demo\)/gi, "");
-        if (/simulado/i.test(row.origenBoleta || "")) row.origenBoleta = "Quentro";
+        if ("origenBoleta" in row) row.origenBoleta = origenLabel(row.origenBoleta);
       });
       if (!ticketBelongs(state.ticket, state.eventCode)) {
         state.ticket = null;
@@ -604,8 +605,7 @@
 
   function origenLabel(value) {
     const raw = String(value || "").trim();
-    if (!raw || /simulado/i.test(raw)) return "Quentro";
-    return raw;
+    return raw === ORIGEN_BOLETA ? raw : ORIGEN_BOLETA;
   }
 
   function escapeHtml(s) {
@@ -690,9 +690,9 @@
 
   function boletaSyncCopy(ev) {
     return (
-      "La boleta nominativa figura en Quentro. La tiquetera de este evento es " +
+      "La boleta nominativa la acredita la tiquetera del club. La tiquetera de este evento es " +
       ev.desk +
-      ". FANECT no llama a una API Quentro: en la puerta el operador lee el QR Fanect."
+      ". En la puerta el operador lee el QR Fanect."
     );
   }
 
@@ -730,7 +730,7 @@
           asiento: t.asiento,
           titular: state.nombre || t.titular,
           eventCode: ev.code,
-          origenBoleta: "Quentro",
+          origenBoleta: ORIGEN_BOLETA,
         };
         renderTickets();
         $("#btnVincular").disabled = false;
@@ -756,7 +756,7 @@
       asiento: src.asiento,
       titular: state.nombre || src.titular,
       eventCode: state.eventCode,
-      origenBoleta: "Quentro",
+      origenBoleta: ORIGEN_BOLETA,
     };
   }
 
@@ -782,7 +782,7 @@
       "v0",
       "event=" + ev.code,
       "club=" + ev.club,
-      "origen=quentro",
+      "origen=tiquetera",
       "pass=" + (state.passId || ""),
       "ticket=" + (t.id || ""),
       "nonce=" + (state.qrNonce || ""),
@@ -906,7 +906,7 @@
       eventTitle: ev.title,
       club: ev.clubName,
       gate: ev.gate,
-      origenBoleta: "Quentro",
+      origenBoleta: ORIGEN_BOLETA,
     };
     state.lastDecision = decision;
     state.auditLog.push(decision);

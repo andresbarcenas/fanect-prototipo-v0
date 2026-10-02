@@ -84,7 +84,7 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 | 4c | `proveedor` | Spinner del proveedor. Sigue el texto: no hay integración real |
 | 5 | `resultado` | Identidad verificada |
 | 6 | `fanpass` | Fan Pass activo |
-| 7 | `boleta` | Vincular boleta nominativa. Etiqueta corta `Boleta Quentro`; el detalle va debajo de la lista |
+| 7 | `boleta` | Vincular boleta nominativa. Etiqueta corta `Tiquetera del club`; el detalle va debajo de la lista |
 | 8 | `pase` | QR dinámico + TTL, chip de categoría y acceso a beneficios (sin salto a operador) |
 | — | `perfil` | Iniciales, datos enmascarados, Fan Pass, FP-ID, chips de consentimiento |
 | — | `historial` | Partidos de la temporada. Sin badge en la fila y sin marcador oficial |
@@ -99,7 +99,7 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 | `operador-home` | Sesión de puerta. Puerta 3 · El Campín o Acceso Occidental · Atanasio, según el evento |
 | `scanner` | Estados: válido / usado / expirado / replay |
 | `decision` | ALLOW o DENY con motivo |
-| `auditoria` | Correlación hincha ↔ boleta ↔ QR Fanect ↔ decisión. Incluye club, evento, `ticketId` y origen de boleta **Quentro** (sin API) |
+| `auditoria` | Correlación hincha ↔ boleta ↔ QR Fanect ↔ decisión. Incluye club, evento, `ticketId` y origen de boleta **tiquetera del club** |
 
 ---
 
@@ -109,11 +109,11 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 2. El evento vigente es **Evento: Millonarios** (`MFC-DEMO-2026`, El Campín, sábado 20:00). El otro chip es **Evento: Nacional** (`NAC-DEMO-2026`, Atanasio, jueves 19:30)  
 3. Registro (precargado) → consentimientos Identidad + Acceso → Continuar  
 4. **Ruta asistida no biométrica** → «Aprobado por agente» → Enviar. Verificación, ruta asistida, proveedor y resultado no llevan franja amarilla  
-5. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta. En boleta, la etiqueta corta es `Boleta Quentro`; el texto largo queda debajo de la lista. IDs `T-MFC-*` o `T-NAC-*`  
+5. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta. En boleta, la etiqueta corta es `Tiquetera del club`; el texto largo queda debajo de la lista. IDs `T-MFC-*` o `T-NAC-*`  
 6. Ver pase + QR Fanect (rotar TTL). **Perfil** → historial (sin marcador oficial) / categoría / privacidad, **Pase**, **Beneficios**  
 7. Si ya hay Fan Pass o boleta y se toca el otro chip: «Cambia el evento y reinicia el pase». Confirmar borra pase, boleta y auditoría para no mezclar `T-MFC` con Nacional  
 8. **Inicio** (arriba) vuelve al hub. Desde ahí, **App Operador**. También se puede abrir `/operador/` directo: es otro documento, no un salto dentro de Hincha. El evento, la boleta y el nonce del QR quedan en `localStorage`, así la auditoría puede mostrar el mismo pase.  
-9. Probar los 4 estados → decisión → mini auditoría (origen de boleta: Quentro)  
+9. Probar los 4 estados → decisión → mini auditoría (origen de boleta: tiquetera del club)  
 
 Deep links (el alias no aparece en los chips). Van en la app, no en el hub:
 
@@ -128,13 +128,13 @@ Consola (dentro de `/hincha/` o `/operador/`): `FanectDemo.reset()` · `FanectDe
 
 ---
 
-## Millonarios, Nacional y Quentro (sin licencia de marca)
+## Millonarios y Nacional (sin licencia de marca)
 
 Nombres comerciales públicos para la narrativa. No hay licencia de escudo, tipografía, kit ni logo de Millonarios FC ni de Atlético Nacional, y este POC no incrusta esos assets. Los colores `#0B3D91` (Millonarios) y `#0B7A3B` (Nacional) son placeholders y **solo** pintan los chips y labels del evento (`Evento: Millonarios`, `Evento: Nacional`). No cambian la marca FANECT (UMBRAL / VÍNCULO / PULSO), el selector de ruta, el TTL, ni los tokens `--status-*` de permitir, denegar, revisión o usado.
 
 Los chips dicen **Evento:** (o el local del partido). No dicen «Soy Millonarios» ni «Soy Nacional»: no afirma afiliación del hincha.
 
-**Quentro** (Crowder) se muestra como fuente de la boleta nominativa: hoy el hincha compra en la tiquetera del club (Entradas Millonarios o Tribuna Verde) y la entrada se acredita en Quentro. FANECT no reemplaza esa billetera y **no** hay API, webhook ni app Quentro conectada. El QR que abre la puerta del piloto es el **QR Fanect**. La auditoría muestra el origen como **Quentro**.
+La boleta nominativa la acredita la **tiquetera del club** (Entradas Millonarios o Tribuna Verde), a cargo del operador de boletería. El prototipo no nombra una plataforma de boletería asociada. FANECT no reemplaza esa tiquetera. El QR que abre la puerta del piloto es el **QR Fanect**. La auditoría muestra el origen como **tiquetera del club**.
 
 Códigos en la UI, solo dos: `MFC-DEMO-2026` (default) y `NAC-DEMO-2026`. `CLASICO-DEMO-2026` no es un tercer evento ni un chip; únicamente un deep link que abre el evento vigente.
 
@@ -154,7 +154,7 @@ El detalle legal de marca vive en esta sección. En el hub solo aparece la líne
 - Venta de datos
 - Consola completa de supervisor
 - Backend / APIs reales
-- API o app de Quentro (el bind de boleta no llama a un servicio)
+- Integración con la tiquetera del club (el bind de boleta no llama a un servicio)
 - Logos, escudos o brand kits oficiales de los clubes
 
 Etiquetas **RAMA P0** / **HINCHA** / **OPERADOR** marcan la rama del piloto y el contexto de app.
