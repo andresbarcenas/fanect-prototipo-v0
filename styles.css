@@ -1026,62 +1026,46 @@ html[data-theme="pulso"] .logo-mark .mark-pulso { display: block; }
   border: 1px solid color-mix(in srgb, var(--brand) 42%, transparent);
 }
 
-/* Equal-weight launcher cards. Neither is primary or secondary. */
-.hub-cards {
+/* Equal-weight filled pills. Same brand fill on both apps. */
+.hub-actions {
   display: flex;
   flex-direction: column;
   gap: 12px;
   width: 100%;
-  text-align: left;
+  position: relative;
+  z-index: 1;
 }
-.hub-card {
+a.hub-cta {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 104px;
-  padding: 16px 16px;
+  justify-content: center;
+  gap: 3px;
+  min-height: 84px;
+  padding: 14px 22px;
+  border-radius: 999px;
   text-decoration: none;
-  color: var(--text);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: none;
+  text-align: center;
+  color: var(--on-brand);
+  line-height: 1.25;
+  white-space: normal;
 }
-.hub-card-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-  min-width: 0;
-}
-.hub-card-title {
+.hub-cta-title {
   font-weight: 800;
   font-size: 1.05rem;
   letter-spacing: -0.02em;
-  color: var(--text);
 }
-.hub-card-desc {
-  font-weight: 500;
-  font-size: .84rem;
-  line-height: 1.35;
-  color: var(--muted);
+.hub-cta-desc {
+  font-weight: 560;
+  font-size: .78rem;
+  line-height: 1.3;
+  max-width: 34ch;
+  color: var(--on-brand);
 }
-.hub-card-chev {
-  flex: none;
-  color: var(--muted);
-  font-size: 1.45rem;
-  line-height: 1;
+a.hub-cta:focus-visible {
+  outline: 2px solid var(--on-brand);
+  outline-offset: 3px;
 }
-.hub-card:hover,
-.hub-card:focus-visible {
-  border-color: color-mix(in srgb, var(--brand-ink) 65%, var(--border));
-}
-.hub-card:focus-visible {
-  outline: 2px solid var(--brand-ink);
-  outline-offset: 2px;
-}
-.hub-card:active { transform: scale(.99); }
 .hub-note {
   margin: 2px 0 0;
   font-size: .78rem;
@@ -1120,27 +1104,6 @@ html[data-theme="pulso"] .logo-mark .mark-pulso { display: block; }
   outline-offset: 2px;
   border-radius: 8px;
 }
-.hub-return-mark {
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
-  background: var(--mark-plate);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 40%, transparent);
-}
-.hub-return-mark .mark {
-  width: 100%;
-  height: 100%;
-  display: none;
-  object-fit: cover;
-  object-position: center;
-}
-html[data-theme="umbral"] .hub-return-mark .mark-umbral,
-html[data-theme="vinculo"] .hub-return-mark .mark-vinculo,
-html[data-theme="pulso"] .hub-return-mark .mark-pulso { display: block; }
-
 .brand-block-sm { margin-bottom: 4px; }
 .logo-mark-sm {
   width: 48px; height: 48px;
