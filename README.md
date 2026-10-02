@@ -1,26 +1,32 @@
 # FANECT — Tribuna Segura (P0)
 
-P0 estático clicable (HTML/CSS/JS). El MVP se presenta como **dos apps separadas** (Hincha y Operador) con un **hub** de entrada. No hay un flujo continuo que mezcle pantallas de hincha y operador.
+P0 estático clicable (HTML/CSS/JS) en GitHub Pages. El MVP son **dos apps en directorios distintos** (Hincha y Operador) y un **hub** en la raíz. No hay un flujo continuo que mezcle pantallas de hincha y operador, ni un botón para saltar de un rol al otro.
 
 **Marca:** FANECT · **Producto (provisional):** Tribuna Segura  
 **Evento (default):** `MFC-DEMO-2026` — Millonarios vs Atlético Nacional · Liga BetPlay · El Campín · Bogotá · Sábado 20:00  
 **Evento alterno:** `NAC-DEMO-2026` — Atlético Nacional vs Millonarios · Atanasio · Medellín · Jueves 19:30  
-**Hub:** Elige App Hincha o App Operador. No hay un flujo continuo entre roles.  
-**Sin backend.** Todo el estado vive en memoria / `localStorage`. No hay integraciones reales.
+**Hub:** «Elegí la app a recorrer». Cada app es un recorrido aparte.  
+**Sin backend.** Todo el estado vive en memoria / `localStorage` del mismo origen. No hay integraciones reales.
 
-**Live:** [https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
+**Live**
+
+- Hub: [https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
+- App Hincha: [https://andresbarcenas.github.io/fanect-prototipo-v0/hincha/](https://andresbarcenas.github.io/fanect-prototipo-v0/hincha/)
+- App Operador: [https://andresbarcenas.github.io/fanect-prototipo-v0/operador/](https://andresbarcenas.github.io/fanect-prototipo-v0/operador/)
 
 ---
 
-## Arquitectura (T-09 / T-10 / T-11)
+## Arquitectura
 
-| Contexto | Pantalla de entrada | Tab bar |
-|----------|---------------------|---------|
-| **Hub** | `hub` | Oculta |
-| **App Hincha** | `hincha-home` | Inicio · Pase · Beneficios · Perfil |
-| **App Operador** | `operador-home` | Inicio · Escáner |
+| Contexto | URL (Pages) | Entrada | Tab bar |
+|----------|-------------|---------|---------|
+| **Hub** | `/fanect-prototipo-v0/` | Dos tarjetas del mismo peso | No |
+| **App Hincha** | `/fanect-prototipo-v0/hincha/` | `hincha-home` | Inicio · Pase · Beneficios · Perfil |
+| **App Operador** | `/fanect-prototipo-v0/operador/` | `operador-home` | Inicio · Escáner |
 
-Desde el hub solo hay dos entradas: **App Hincha** y **App Operador**. «Cambiar de app» vuelve al hub. El QR del hincha **no** enlaza al escáner.
+Las tarjetas del hub enlazan a `hincha/` y `operador/` (rutas relativas, válidas en el project site y en un servidor local). Dentro de cada app, el único regreso al hub es el enlace **Inicio** (marca, `../`). La pestaña Inicio abre el home de esa app. No hay enlace a la otra app. El QR del hincha **no** enlaza al escáner.
+
+El selector **UMBRAL | VÍNCULO | PULSO** vive en el hub. La ruta queda en `localStorage` (`fanect_theme`) y las dos apps la heredan al cargar `styles.css`.
 
 ---
 
@@ -28,7 +34,9 @@ Desde el hub solo hay dos entradas: **App Hincha** y **App Operador**. «Cambiar
 
 ### Opción A — GitHub Pages
 
-[https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
+- [https://andresbarcenas.github.io/fanect-prototipo-v0/](https://andresbarcenas.github.io/fanect-prototipo-v0/)
+- [https://andresbarcenas.github.io/fanect-prototipo-v0/hincha/](https://andresbarcenas.github.io/fanect-prototipo-v0/hincha/)
+- [https://andresbarcenas.github.io/fanect-prototipo-v0/operador/](https://andresbarcenas.github.io/fanect-prototipo-v0/operador/)
 
 ### Opción B — Servidor local
 
@@ -37,11 +45,13 @@ cd fanect-prototipo-v0
 python3 -m http.server 8765
 ```
 
-Luego: [http://127.0.0.1:8765/](http://127.0.0.1:8765/)
+Luego:
 
-### Opción C — Archivo directo
+- [http://127.0.0.1:8765/](http://127.0.0.1:8765/)
+- [http://127.0.0.1:8765/hincha/](http://127.0.0.1:8765/hincha/)
+- [http://127.0.0.1:8765/operador/](http://127.0.0.1:8765/operador/)
 
-Abre `index.html` (`file://`).
+Las rutas son relativas (`hincha/`, `operador/`, `../`), así que el mismo HTML sirve en la raíz local y bajo `/fanect-prototipo-v0/` en Pages. No abras los HTML con `file://`: el directorio `hincha/` no resuelve igual y `localStorage` puede partirse por archivo.
 
 ---
 
@@ -49,7 +59,7 @@ Abre `index.html` (`file://`).
 
 En escritorio el POC se centra en un marco tipo iPhone 14/15: bisel, Dynamic Island, barra de estado (hora, señal, batería), área segura y barra de inicio. En un viewport estrecho (≤520 px) el bisel, la isla y la barra de inicio se ocultan y la app ocupa el ancho, para que siga usable en un teléfono real. La interfaz usa la pila de sistema (`-apple-system`, `BlinkMacSystemFont`, `SF Pro Text`, `system-ui`); el wordmark sigue en Archivo Black. Un fundido corto acompaña el cambio de pantalla y no retrasa los timers.
 
-Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector **UMBRAL | VÍNCULO | PULSO**, los tokens `--status-*` y los flujos no cambian. La franja amarilla de verificación se retiró (CSO, opción A).
+Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector **UMBRAL | VÍNCULO | PULSO** está en el hub; Hincha y Operador heredan la ruta. Los tokens `--status-*` y los flujos no cambian. La franja amarilla de verificación se retiró (CSO, opción A).
 
 ---
 
@@ -59,7 +69,7 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 
 | ID | Descripción |
 |----|-------------|
-| `hub` | Marca FANECT + dos tarjetas de entrada (Hincha / Operador) |
+| `/` | Marca FANECT + dos tarjetas de igual peso (Hincha / Operador) y la línea «Cada app es un recorrido aparte…» |
 
 ### App Hincha (progreso 1–8)
 
@@ -102,18 +112,19 @@ Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector
 5. Activar Fan Pass → **Ir a mi perfil** o Vincular boleta. En boleta, la etiqueta corta es `Boleta Quentro`; el texto largo queda debajo de la lista. IDs `T-MFC-*` o `T-NAC-*`  
 6. Ver pase + QR Fanect (rotar TTL). **Perfil** → historial (sin marcador oficial) / categoría / privacidad, **Pase**, **Beneficios**  
 7. Si ya hay Fan Pass o boleta y se toca el otro chip: «Cambia el evento y reinicia el pase». Confirmar borra pase, boleta y auditoría para no mezclar `T-MFC` con Nacional  
-8. **Cambiar de app** → hub → **App Operador** → Abrir escáner  
+8. **Inicio** (marca, arriba) vuelve al hub. Desde ahí, **App Operador**. También se puede abrir `/operador/` directo: es otro documento, no un salto dentro de Hincha. El evento guardado en `localStorage` se lee al entrar.  
 9. Probar los 4 estados → decisión → mini auditoría (origen de boleta: Quentro)  
 
-Deep links (el alias no aparece en los chips):
+Deep links (el alias no aparece en los chips). Van en la app, no en el hub:
 
-- `?event=NAC-DEMO-2026` o `?club=nacional`
-- `?event=MFC-DEMO-2026` o `?club=millonarios`
-- `?event=CLASICO-DEMO-2026` resuelve al evento vigente Millonarios. Con `club=nacional`, resuelve a Nacional
+- `hincha/?event=NAC-DEMO-2026` o `hincha/?club=nacional`
+- `hincha/?event=MFC-DEMO-2026` o `hincha/?club=millonarios`
+- `hincha/?event=CLASICO-DEMO-2026` resuelve al evento vigente Millonarios. Con `club=nacional`, resuelve a Nacional
+- `operador/?event=NAC-DEMO-2026` aplica la misma resolución en la sesión de puerta
 
-Para volver al home de primera visita: `FanectDemo.reset()`.
+Para volver al home de primera visita, en la consola de esa app: `FanectDemo.reset()`.
 
-Consola: `FanectDemo.reset()` · `FanectDemo.go('perfil')` · `FanectDemo.state.app`
+Consola (dentro de `/hincha/` o `/operador/`): `FanectDemo.reset()` · `FanectDemo.go('perfil')` · `FanectDemo.state.app` · `FanectTheme.apply('pulso', true)`
 
 ---
 
@@ -154,17 +165,19 @@ Etiquetas **RAMA P0** / **HINCHA** / **OPERADOR** marcan la rama del piloto y el
 
 ```
 fanect-prototipo-v0/
-├── index.html
-├── styles.css
-├── app.js
-├── assets/fanect-mark.svg
-├── assets/fanect-f.svg
+├── index.html              # hub
+├── hincha/index.html       # App Hincha
+├── operador/index.html     # App Operador
+├── styles.css              # compartido (temas + --status-*)
+├── js/theme.js             # UMBRAL | VÍNCULO | PULSO + reloj
+├── js/runtime.js           # pantallas de la app abierta
+├── assets/                 # marcas UMBRAL, VÍNCULO, PULSO
 └── README.md
 ```
 
 ## Dirección de marca (provisional)
 
-Tres rutas del board **Fanect / tres rutas de identidad** (30 sep 2026). Ninguna es la marca oficial. El selector **UMBRAL | VÍNCULO | PULSO** está fijo en el marco (hub, Hincha y Operador) y persiste en `localStorage` (`fanect_theme`). Cambiar de ruta no navega ni borra el flujo; un reload normal restaura la última ruta y el estado ya guardado.
+Tres rutas del board **Fanect / tres rutas de identidad** (30 sep 2026). Ninguna es la marca oficial. El selector **UMBRAL | VÍNCULO | PULSO** está en el hub y persiste en `localStorage` (`fanect_theme`). Hincha y Operador no repiten el selector: al abrir leen la misma clave y aplican `data-theme` antes de pintar. Cambiar de ruta no navega ni borra el flujo; un reload restaura la última ruta y el estado ya guardado.
 
 **Tema por defecto: `umbral`** (fondo oscuro de la ruta A). Es el más cercano al POC oscuro anterior. El lima deportivo (`#c8ff3d`) ya no pinta superficies ni estados.
 

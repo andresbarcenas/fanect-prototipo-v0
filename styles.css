@@ -1026,26 +1026,120 @@ html[data-theme="pulso"] .logo-mark .mark-pulso { display: block; }
   border: 1px solid color-mix(in srgb, var(--brand) 42%, transparent);
 }
 
-.hub-card-btn {
+/* Equal-weight launcher cards. Neither is primary or secondary. */
+.hub-cards {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
+  gap: 12px;
+  width: 100%;
   text-align: left;
-  padding: 16px 18px;
+}
+.hub-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 104px;
+  padding: 16px 16px;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: none;
+}
+.hub-card-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
 }
 .hub-card-title {
   font-weight: 800;
   font-size: 1.05rem;
-  letter-spacing: .02em;
+  letter-spacing: -0.02em;
+  color: var(--text);
 }
 .hub-card-desc {
   font-weight: 500;
-  font-size: .82rem;
-  opacity: .78;
+  font-size: .84rem;
+  line-height: 1.35;
+  color: var(--muted);
 }
-.btn-primary.hub-card-btn .hub-card-desc { color: var(--on-brand); opacity: .85; }
-.btn-secondary.hub-card-btn .hub-card-desc { color: var(--muted); }
+.hub-card-chev {
+  flex: none;
+  color: var(--muted);
+  font-size: 1.45rem;
+  line-height: 1;
+}
+.hub-card:hover,
+.hub-card:focus-visible {
+  border-color: color-mix(in srgb, var(--brand-ink) 65%, var(--border));
+}
+.hub-card:focus-visible {
+  outline: 2px solid var(--brand-ink);
+  outline-offset: 2px;
+}
+.hub-card:active { transform: scale(.99); }
+.hub-note {
+  margin: 2px 0 0;
+  font-size: .78rem;
+  line-height: 1.4;
+  font-weight: 500;
+  color: var(--muted);
+  text-align: center;
+}
+.phone-frame[data-app="hub"] .screen-body {
+  padding-bottom: calc(20px + var(--home-inset));
+}
+.phone-frame[data-app="hub"] .screen-body.home-body {
+  overflow-y: auto;
+}
+
+/* Discrete return to the hub. Not a role switcher. */
+.hub-return {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  flex-shrink: 0;
+  margin: 0 16px 2px;
+  padding: 2px 2px 6px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  width: fit-content;
+}
+.hub-return:hover,
+.hub-return:focus-visible { color: var(--text); }
+.hub-return:focus-visible {
+  outline: 2px solid var(--brand-ink);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+.hub-return-mark {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--mark-plate);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 40%, transparent);
+}
+.hub-return-mark .mark {
+  width: 100%;
+  height: 100%;
+  display: none;
+  object-fit: cover;
+  object-position: center;
+}
+html[data-theme="umbral"] .hub-return-mark .mark-umbral,
+html[data-theme="vinculo"] .hub-return-mark .mark-vinculo,
+html[data-theme="pulso"] .hub-return-mark .mark-pulso { display: block; }
 
 .brand-block-sm { margin-bottom: 4px; }
 .logo-mark-sm {

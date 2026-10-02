@@ -1,10 +1,13 @@
 /**
- * FANECT / Tribuna Segura — P0 estático (sin backend)
- * Dos apps: Hincha y Operador, con hub de entrada.
- * Estado en memoria + localStorage.
+ * FANECT / Tribuna Segura — runtime de una app (Hincha u Operador).
+ * El hub es index.html y no carga este archivo.
+ * Estado compartido en localStorage (mismo origen). Sin salto de rol.
  */
 (function () {
   "use strict";
+
+  const APP = document.documentElement.getAttribute("data-app");
+  if (APP !== "hincha" && APP !== "operador") return;
 
   const FAN_STEPS = {
     entrada: 1,
@@ -187,14 +190,6 @@
       title: "DENEGAR INGRESO",
       reason: "Replay detectado · token QR ya presentado",
     },
-  };
-
-  const THEMES = ["umbral", "vinculo", "pulso"];
-  const THEME_KEY = "fanect_theme";
-  const THEME_COLOR = {
-    umbral: "#121a24",
-    vinculo: "#0e1628",
-    pulso: "#120c16",
   };
 
   const state = {
@@ -406,7 +401,10 @@
   }
 
   function go(name) {
-    if (name === "home") name = "hub";
+    if (name === "home" || name === "hub") {
+      window.location.href = "../";
+      return;
+    }
     const next = document.getElementById("screen-" + name);
     if (!next) {
       console.warn("Pantalla no encontrada:", name);
@@ -431,6 +429,7 @@
     const bar = $("#progressBar");
     const fill = $("#progressFill");
     const label = $("#progressLabel");
+    if (!bar || !fill || !label) return;
     const step = FAN_STEPS[name];
     if (!step) {
       bar.hidden = true;
@@ -473,7 +472,8 @@
     if (name === "scanner") {
       state.selectedQrState = null;
       $all(".state-btn").forEach((b) => b.classList.remove("selected"));
-      $("#btnScan").disabled = true;
+      const scan = $("#btnScan");
+      if (scan) scan.disabled = true;
     }
     if (name === "decision") renderDecision();
     if (name === "auditoria") renderAuditoria();
@@ -872,7 +872,8 @@
     state.selectedQrState = st;
     $all(".state-btn").forEach((b) => b.classList.remove("selected"));
     if (btn) btn.classList.add("selected");
-    $("#btnScan").disabled = false;
+    const scan = $("#btnScan");
+    if (scan) scan.disabled = false;
   }
 
   function doScan() {
@@ -1299,39 +1300,13 @@
     updatePrivacyCopy();
   }
 
-  function tickClock() {
-    const el = $("#statusTime");
-    if (!el) return;
-    const d = new Date();
-    el.textContent =
-      String(d.getHours()).padStart(2, "0") +
-      ":" +
-      String(d.getMinutes()).padStart(2, "0");
-  }
-
-  function applyTheme(name, persist) {
-    const theme = THEMES.indexOf(name) >= 0 ? name : "umbral";
-    document.documentElement.setAttribute("data-theme", theme);
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", THEME_COLOR[theme]);
-    $all("[data-theme-choice]").forEach((btn) => {
-      const on = btn.getAttribute("data-theme-choice") === theme;
-      btn.classList.toggle("is-active", on);
-      btn.setAttribute("aria-checked", on ? "true" : "false");
-    });
-    if (persist) {
-      try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
-    }
+  function on(id, event, fn) {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener(event, fn);
   }
 
   function bind() {
     document.body.addEventListener("click", (e) => {
-      const themeEl = e.target.closest("[data-theme-choice]");
-      if (themeEl) {
-        e.preventDefault();
-        applyTheme(themeEl.getAttribute("data-theme-choice"), true);
-        return;
-      }
       const eventEl = e.target.closest("[data-event]");
       if (eventEl) {
         e.preventDefault();
@@ -1350,16 +1325,16 @@
       }
     });
 
-    $("#btnRegistro").addEventListener("click", submitRegistro);
-    $("#consentId").addEventListener("change", onConsentChange);
-    $("#consentAcceso").addEventListener("change", onConsentChange);
-    $("#consentComms").addEventListener("change", onConsentChange);
-    $("#prefNoAds").addEventListener("change", () => {
+    on("btnRegistro", "click", submitRegistro);
+    on("consentId", "change", onConsentChange);
+    on("consentAcceso", "change", onConsentChange);
+    on("consentComms", "change", onConsentChange);
+    on("prefNoAds", "change", () => {
       state.prefs.noAds = $("#prefNoAds").checked;
       save();
       updatePrivacyCopy();
     });
-    $("#prefComms").addEventListener("change", () => {
+    on("prefComms", "change", () => {
       state.consents.comms = $("#prefComms").checked;
       state.consentsKnown = true;
       const box = $("#consentComms");
@@ -1367,50 +1342,45 @@
       save();
       updatePrivacyCopy();
     });
-    $("#prefRapido").addEventListener("change", () => {
+    on("prefRapido", "change", () => {
       state.prefs.accesoRapido = $("#prefRapido").checked;
       save();
       updatePrivacyCopy();
     });
-    $("#btnConsent").addEventListener("click", () => {
+    on("btnConsent", "click", () => {
       if ($("#consentId").checked && $("#consentAcceso").checked) {
         readConsentForm();
         go("verificacion");
       }
     });
-    $("#choiceAsistida").addEventListener("click", startAsistida);
-    $("#choiceProvider").addEventListener("click", startProveedor);
-    $("#btnAsistida").addEventListener("click", submitAsistida);
-    $("#btnVincular").addEventListener("click", vincularBoleta);
-    const confirmEvent = $("#btnConfirmEvent");
-    if (confirmEvent) confirmEvent.addEventListener("click", confirmEventReset);
-    const cancelEvent = $("#btnCancelEvent");
-    if (cancelEvent) {
-      cancelEvent.addEventListener("click", () => {
-        state.pendingEventCode = null;
-        renderEntrada();
-      });
-    }
-    $("#btnRotar").addEventListener("click", () => {
+    on("choiceAsistida", "click", startAsistida);
+    on("choiceProvider", "click", startProveedor);
+    on("btnAsistida", "click", submitAsistida);
+    on("btnVincular", "click", vincularBoleta);
+    on("btnConfirmEvent", "click", confirmEventReset);
+    on("btnCancelEvent", "click", () => {
+      state.pendingEventCode = null;
+      renderEntrada();
+    });
+    on("btnRotar", "click", () => {
       rotateQr(false);
       updateTtlDisplay();
     });
-    $("#btnScan").addEventListener("click", doScan);
-    $("#btnAuditoria").addEventListener("click", () => go("auditoria"));
+    on("btnScan", "click", doScan);
+    on("btnAuditoria", "click", () => go("auditoria"));
   }
 
   load();
   bind();
-  applyTheme(document.documentElement.getAttribute("data-theme"), false);
-  tickClock();
-  setInterval(tickClock, 30000);
-  go("hub");
+  go(APP === "operador" ? "operador-home" : "hincha-home");
 
   window.FanectDemo = {
     go,
     state,
     rotateQr,
-    setTheme(name) { applyTheme(name, true); },
+    setTheme(name) {
+      if (window.FanectTheme) window.FanectTheme.apply(name, true);
+    },
     setEvent(code) { requestEvent(code); },
     reset() {
       localStorage.removeItem("fanect_p0");
