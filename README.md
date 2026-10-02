@@ -41,7 +41,15 @@ Luego: [http://127.0.0.1:8765/](http://127.0.0.1:8765/)
 
 ### Opción C — Archivo directo
 
-Abre `index.html` (`file://`). Viewport ~390 px; en escritorio se muestra en marco tipo teléfono.
+Abre `index.html` (`file://`).
+
+---
+
+## Marco iOS (T-16)
+
+En escritorio el POC se centra en un marco tipo iPhone 14/15: bisel, Dynamic Island, barra de estado (hora, señal, batería), área segura y barra de inicio. En un viewport estrecho (≤520 px) el bisel, la isla y la barra de inicio se ocultan y la app ocupa el ancho, para que el demo siga siendo usable en un teléfono real. La interfaz usa la pila de sistema (`-apple-system`, `BlinkMacSystemFont`, `SF Pro Text`, `system-ui`); el wordmark sigue en Archivo Black. Un fundido corto acompaña el cambio de pantalla y no retrasa los timers del demo.
+
+Es solo chrome visual. No es PWA, Capacitor ni binario de App Store. El selector **UMBRAL | VÍNCULO | PULSO**, los tokens `--status-*`, la franja **DEMO · SIMULADO** y los flujos no cambian.
 
 ---
 
@@ -166,7 +174,7 @@ Tres rutas del board **Fanect / tres rutas de identidad** (30 sep 2026). Ninguna
 | VÍNCULO | `#0e1628` | royal `#2f5bff` (texto/símbolo en el mismo tono, más claro: `#8eaaff`) | ojo / hoja de dos trazos |
 | PULSO | `#120c16` | magenta `#c2185b` (texto/símbolo `#f472b6`) | dos barras diagonales |
 
-El lienzo de escritorio usa el fondo claro del board (`--canvas`). La app dentro del teléfono usa el fondo oscuro. Tipografía: Archivo Black (wordmark) y Manrope (UI). Sin tagline.
+El lienzo de escritorio usa el fondo claro del board (`--canvas`). La app dentro del teléfono usa el fondo oscuro. Tipografía: Archivo Black (wordmark) y la pila de sistema, tipo SF Pro, para la UI. Sin tagline.
 
 ### Estados que no siguen la marca
 
