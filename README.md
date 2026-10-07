@@ -26,7 +26,7 @@ P0 estático clicable (HTML/CSS/JS) en GitHub Pages. El MVP son **dos apps en di
 
 Los botones del hub enlazan a `hincha/` y `operador/` (rutas relativas, válidas en el project site y en un servidor local). Dentro de cada app, el único regreso al hub es el enlace **Inicio** (`../`). La pestaña Inicio abre el home de esa app. No hay enlace a la otra app ni selector de marca dentro de la app. El QR del hincha **no** enlaza al escáner.
 
-El selector **UMBRAL | VÍNCULO | PULSO** vive en el hub. La ruta queda en `localStorage` (`fanect_theme`) y las dos apps la heredan al cargar `styles.css`.
+El selector **UMBRAL | VÍNCULO | PULSO** vive en el hub. La ruta queda en `localStorage` (`fanect_theme`) y las dos apps la heredan en la siguiente carga, porque un script en el `head` fija `data-theme` antes de que pinte `styles.css`.
 
 ---
 
